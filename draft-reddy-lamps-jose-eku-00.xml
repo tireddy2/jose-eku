@@ -12,9 +12,8 @@
 <?rfc subcompact="no"?>
 <rfc category="std" docName="draft-reddy-lamps-jose-eku-00" ipr="trust200902">
   <front>
-    <title abbrev="Encrypted Explicit Signals to network">X.509 Certificate
-    Extended Key Usage (EKU) for Javascript Object Signing and
-    Encryption</title>
+    <title abbrev="EKU for JOSE">X.509 Certificate Extended Key Usage (EKU)
+    for Javascript Object Signing and Encryption</title>
 
     <author fullname="Tirumaleswar Reddy" initials="T." surname="Reddy">
       <organization>Nokia</organization>
@@ -108,7 +107,7 @@
           <t>Certificates for signing the OAuth 2.0 access tokens for service
           authorization to grant temporary access to resources provided by NF
           producers using JWS (Section 13.4.1 of <xref
-          target="TS33.501"></xref>) </t>
+          target="TS33.501"></xref>)</t>
         </list></t>
 
       <t>If the purpose of the issued certificates is not restricted, i.e.,

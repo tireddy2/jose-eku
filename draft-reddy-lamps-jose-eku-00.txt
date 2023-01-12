@@ -5,7 +5,7 @@
 LAMPS WG                                                        T. Reddy
 Internet-Draft                                                  J. Ekman
 Intended status: Standards Track                                   Nokia
-Expires: 14 July 2023                                    10 January 2023
+Expires: 16 July 2023                                    12 January 2023
 
 
 X.509 Certificate Extended Key Usage (EKU) for Javascript Object Signing
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 July 2023.
+   This Internet-Draft will expire on 16 July 2023.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Reddy & Ekman             Expires 14 July 2023                  [Page 1]
+Reddy & Ekman             Expires 16 July 2023                  [Page 1]
 
-Internet-Draft    Encrypted Explicit Signals to network     January 2023
+Internet-Draft                EKU for JOSE                  January 2023
 
 
    extracted from this document must include Revised BSD License text as
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Reddy & Ekman             Expires 14 July 2023                  [Page 2]
+Reddy & Ekman             Expires 16 July 2023                  [Page 2]
 
-Internet-Draft    Encrypted Explicit Signals to network     January 2023
+Internet-Draft                EKU for JOSE                  January 2023
 
 
    Service Communication Proxy (SCP) (optional) and Security Edge
@@ -165,9 +165,9 @@ Internet-Draft    Encrypted Explicit Signals to network     January 2023
 
 
 
-Reddy & Ekman             Expires 14 July 2023                  [Page 3]
+Reddy & Ekman             Expires 16 July 2023                  [Page 3]
 
-Internet-Draft    Encrypted Explicit Signals to network     January 2023
+Internet-Draft                EKU for JOSE                  January 2023
 
 
    Vendor-defined KeyPurposeIds that are used in a PKI governed by the
@@ -221,9 +221,9 @@ Internet-Draft    Encrypted Explicit Signals to network     January 2023
 
 
 
-Reddy & Ekman             Expires 14 July 2023                  [Page 4]
+Reddy & Ekman             Expires 16 July 2023                  [Page 4]
 
-Internet-Draft    Encrypted Explicit Signals to network     January 2023
+Internet-Draft                EKU for JOSE                  January 2023
 
 
    As described in [RFC5280], the EKU extension may, at the option of
@@ -277,9 +277,9 @@ Internet-Draft    Encrypted Explicit Signals to network     January 2023
 
 
 
-Reddy & Ekman             Expires 14 July 2023                  [Page 5]
+Reddy & Ekman             Expires 16 July 2023                  [Page 5]
 
-Internet-Draft    Encrypted Explicit Signals to network     January 2023
+Internet-Draft                EKU for JOSE                  January 2023
 
 
 7.  Privacy Considerations
@@ -333,9 +333,9 @@ Internet-Draft    Encrypted Explicit Signals to network     January 2023
 
 
 
-Reddy & Ekman             Expires 14 July 2023                  [Page 6]
+Reddy & Ekman             Expires 16 July 2023                  [Page 6]
 
-Internet-Draft    Encrypted Explicit Signals to network     January 2023
+Internet-Draft                EKU for JOSE                  January 2023
 
 
    [RFC2119]  Bradner, S. and RFC Publisher, "Key words for use in RFCs
@@ -389,9 +389,9 @@ Internet-Draft    Encrypted Explicit Signals to network     January 2023
 
 
 
-Reddy & Ekman             Expires 14 July 2023                  [Page 7]
+Reddy & Ekman             Expires 16 July 2023                  [Page 7]
 
-Internet-Draft    Encrypted Explicit Signals to network     January 2023
+Internet-Draft                EKU for JOSE                  January 2023
 
 
    [RFC8446]  Rescorla, E. and RFC Publisher, "The Transport Layer
@@ -445,9 +445,9 @@ Internet-Draft    Encrypted Explicit Signals to network     January 2023
 
 
 
-Reddy & Ekman             Expires 14 July 2023                  [Page 8]
+Reddy & Ekman             Expires 16 July 2023                  [Page 8]
 
-Internet-Draft    Encrypted Explicit Signals to network     January 2023
+Internet-Draft                EKU for JOSE                  January 2023
 
 
 Appendix A.  ASN.1 Module
@@ -501,4 +501,4 @@ Authors' Addresses
 
 
 
-Reddy & Ekman             Expires 14 July 2023                  [Page 9]
+Reddy & Ekman             Expires 16 July 2023                  [Page 9]
