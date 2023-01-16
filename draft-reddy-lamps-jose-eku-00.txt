@@ -5,7 +5,7 @@
 LAMPS WG                                                        T. Reddy
 Internet-Draft                                                  J. Ekman
 Intended status: Standards Track                                   Nokia
-Expires: 16 July 2023                                    12 January 2023
+Expires: 20 July 2023                                    16 January 2023
 
 
 X.509 Certificate Extended Key Usage (EKU) for Javascript Object Signing
@@ -21,7 +21,7 @@ Abstract
    key certificates.  An application processing JWS or JWE may require
    that the EKU extension be present and that a JWS KeyPurposeId or JWE
    KeyPurposeId be indicated in order for the certificate to be
-   acceptable to validate the JWS signature or to encrypt key in JWE.
+   acceptable to validate the JWS signature or to encrypt a key in JWE.
 
 Status of This Memo
 
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 July 2023.
+   This Internet-Draft will expire on 20 July 2023.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Reddy & Ekman             Expires 16 July 2023                  [Page 1]
+Reddy & Ekman             Expires 20 July 2023                  [Page 1]
 
 Internet-Draft                EKU for JOSE                  January 2023
 
@@ -73,10 +73,11 @@ Table of Contents
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
    7.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   6
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-   9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   6
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .   6
-     10.2.  Informative References . . . . . . . . . . . . . . . . .   7
+   9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .   6
+   10. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   7
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .   7
+     11.2.  Informative References . . . . . . . . . . . . . . . . .   7
    Appendix A.  ASN.1 Module . . . . . . . . . . . . . . . . . . . .   9
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
@@ -87,34 +88,34 @@ Table of Contents
    repository "SMI Security for PKIX Extended Key Purpose" [RFC7299]
    includes a number of KeyPurposeIds.  While usage of the
    anyExtendedKeyUsage KeyPurposeId is bad practice for publicly trusted
-   certificates (multi-purpose or single-purpose), there are no extended 
-   key usages (KeyPurposeIds) explicitly assigned for JSON Web Signature (JWS)
-   [RFC7515] and JSON Web Encryption (JWE) [RFC7516]. JSON Web
+   certificates (multi-purpose or single-purpose), there are no extended
+   key purpose identifiers explicitly assigned for JSON Web Signature
+   (JWS) [RFC7515] and JSON Web Encryption (JWE) [RFC7516].  JSON Web
    Signature (JWS) represents content secured with digital signatures or
    Message Authentication Codes (MACs) using JSON-based [RFC7159] data
    structures.  The JWS cryptographic mechanisms provide integrity
-   protection for an arbitrary sequence of octets. JSON Web Encryption
+   protection for an arbitrary sequence of octets.  JSON Web Encryption
    (JWE) represents encrypted content using JSON-based data structures.
    The JWE cryptographic mechanisms encrypt and provide integrity
-   protection for an arbitrary sequence of octets. The cryptographic
+   protection for an arbitrary sequence of octets.  The cryptographic
    algorithms and identifiers to be used with the JSON Web Signature
-   (JWS), JSON Web Encryption (JWE) are defined in [RFC7518].
+   (JWS) and JSON Web Encryption (JWE) are defined in [RFC7518].
 
-   The 3rd Generation Partnership Project (3GPP) has specified several
-   Network Functions (NFs) as part of the service-based architecture within 
-   the 5G System in [TS23.501]. The Operators of 5G systems make use of an internal PKI 
-   to generate X.509 certificates for the NFs in a 5G system. 
-   
+   Network Functions (NFs) as part of the service-based architecture
+   within the 5G System [TS23.501].  The Operators of 5G systems make
+   use of an internal PKI to generate X.509 PKI certificates for the NFs
+   in a 5G system.  The certificates are used for the following
+   purposes:
 
-Reddy & Ekman             Expires 16 July 2023                  [Page 2]
+
+
+Reddy & Ekman             Expires 20 July 2023                  [Page 2]
 
 Internet-Draft                EKU for JOSE                  January 2023
 
 
-   The certificates are used for the following purposes:
-
-   *  TLS EE Client and Server certificates for 5GC Service Based Architecture (SBA) NFs
-      (Section 6.1.3c of [TS33.310])
+   *  Client and Server certificates for NFs in 5GC Service Based
+      Architecture (Section 6.1.3c of [TS33.310])
 
    *  Certificates for signing Client Credentials Assertion (CCA) tokens
       using JWS (Section 13.3.8.2 of [TS33.501])
@@ -136,40 +137,38 @@ Internet-Draft                EKU for JOSE                  January 2023
    public/private keys and applies for a certificate to the operator CA,
    could obtain a certificate which can be misused for tasks that this
    NF is not entitled to perform.  For example, a NF service consumer
-   could impersonate NF service producers using its certificate. 
-   Another example, if the purpose of the certificate for
-   the NF service consumer is to use it as a TLS EE client certificate, then 
-   the NF with this TLS EE client certificate and corresponding private key
-   must not be allowed to sign the CCA. In case that a NF service producer
-   received the signed CCA from the NF service consumer, the NF would
-   accept the token, even if CCA is signed with a certificate not issued
-   for this purpose.
+   could impersonate NF service producers using its certificate.
+   Another example, if the purpose of the certificate is for the NF
+   service consumer is to use it as a client certificate, the NF with
+   this client certificate and corresponding private key must not be
+   allowed to sign the CCA.  When a NF service producer receives the
+   signed CCA from the NF service consumer, the NF would accept the
+   token even if CCA is signed with a certificate not issued for this
+   purpose.
 
    The KeyPurposeId id-kp-serverAuth (Section 4.2.1.12 of [RFC5280]) can
-   be used to identify that the certificate is for a TLS server (e.g., NF
+   be used to identify that the certificate is for a server (e.g., NF
    service producer), and the KeyPurposeId id-kp-clientAuth
    (Section 4.2.1.12 of [RFC5280]) can be used to identify that the
-   certificate is for a TLS client (e.g., NF service consumer). However,
-   there are no KeyPurposeIds to identify whether the certificate can be used
-   to generate JWS or JWE.
-
-
-
-
-
-Reddy & Ekman             Expires 16 July 2023                  [Page 3]
-
-Internet-Draft                EKU for JOSE                  January 2023
-
+   certificate is for a client (e.g., NF service consumer).  However,
+   there is no KeyPurposeIds to identify whether the certificate can be
+   used to generate JWS or JWE.
 
    Vendor-defined KeyPurposeIds that are used in a PKI governed by the
    vendor or a group of vendors pose no interoperability concern.
    Appropriating, or misappropriating as the case may be, KeyPurposeIds
    for use outside of their originally intended vendor or group of
    vendors controlled environment can introduce problems, the impact of
-   which is difficult to determine. Therefore, it is not favorable to
+   which is difficult to determine.  Therefore, it is not favorable to
    use vendor-defined KeyPurposeIds for JWS and JWE in deployments that
    are not governed by the vendor.
+
+
+
+Reddy & Ekman             Expires 20 July 2023                  [Page 3]
+
+Internet-Draft                EKU for JOSE                  January 2023
+
 
    This document defines extended key purpose identifiers for JWS and
    JWE.
@@ -194,16 +193,16 @@ Internet-Draft                EKU for JOSE                  January 2023
    Applications processing JWS or JWE MAY require that the EKU extension
    be present and that the id-kp-jws or id-kp-jwe be indicated in order
    for the certificate to be acceptable to validate the JWS Signature or
-   to encrypt the JSON objects or other content in JWE.
+   to encrypt the Content Encryption Key (CEK) in JWE.
 
 4.  Including the Extended KeyPurpose for JWS and JWE in Certificates
 
    [RFC5280] specifies the EKU X.509 certificate extension for use on
-   end entity certificates. The extension indicates one or more
-   purposes for which the certified public key is valid. The EKU
+   end entity certificates.  The extension indicates one or more
+   purposes for which the certified public key is valid.  The EKU
    extension can be used in conjunction with the key usage extension,
    which indicates the set of basic cryptographic operations for which
-   the certified key may be used. The EKU extension syntax is repeated
+   the certified key may be used.  The EKU extension syntax is repeated
    here for convenience:
 
    ExtKeyUsageSyntax ::= SEQUENCE SIZE (1..MAX) OF KeyPurposeId
@@ -213,7 +212,16 @@ Internet-Draft                EKU for JOSE                  January 2023
 
 
 
-Reddy & Ekman             Expires 16 July 2023                  [Page 4]
+
+
+
+
+
+
+
+
+
+Reddy & Ekman             Expires 20 July 2023                  [Page 4]
 
 Internet-Draft                EKU for JOSE                  January 2023
 
@@ -225,7 +233,7 @@ Internet-Draft                EKU for JOSE                  January 2023
    the public key encoded in the certificate has been certified to be
    used for validating the JWS signature.  Inclusion of KeyPurposeId id-
    kp-jwe in a certificate indicates that the public key encoded in the
-   certificate has been certified to be used for encrypting the JSON object in
+   certificate has been certified to be used for encrypting the CEK in
    JWE (for example, encrypt the CEK with the recipient's public key
    using the RSAES-OAEP algorithm to produce the JWE Encrypted Key).
 
@@ -269,7 +277,7 @@ Internet-Draft                EKU for JOSE                  January 2023
 
 
 
-Reddy & Ekman             Expires 16 July 2023                  [Page 5]
+Reddy & Ekman             Expires 20 July 2023                  [Page 5]
 
 Internet-Draft                EKU for JOSE                  January 2023
 
@@ -314,21 +322,29 @@ Internet-Draft                EKU for JOSE                  January 2023
 
                              Figure 2: Table 2
 
-9.  Acknowledgments
+9.  Contributors
 
-   TODO
+   The following individuals have contributed to this document:
 
-10.  References
+         German Peinado
+         Nokia
 
-10.1.  Normative References
+         Email: german.peinado@nokia.com
 
 
 
-
-Reddy & Ekman             Expires 16 July 2023                  [Page 6]
+Reddy & Ekman             Expires 20 July 2023                  [Page 6]
 
 Internet-Draft                EKU for JOSE                  January 2023
 
+
+10.  Acknowledgments
+
+   TODO
+
+11.  References
+
+11.1.  Normative References
 
    [RFC2119]  Bradner, S. and RFC Publisher, "Key words for use in RFCs
               to Indicate Requirement Levels", BCP 14, RFC 2119,
@@ -360,7 +376,7 @@ Internet-Draft                EKU for JOSE                  January 2023
               DOI 10.17487/RFC8174, May 2017,
               <https://www.rfc-editor.org/info/rfc8174>.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [RFC5246]  Dierks, T., Rescorla, E., and RFC Publisher, "The
               Transport Layer Security (TLS) Protocol Version 1.2",
@@ -371,20 +387,16 @@ Internet-Draft                EKU for JOSE                  January 2023
               Working Group", RFC 7299, DOI 10.17487/RFC7299, July 2014,
               <https://www.rfc-editor.org/info/rfc7299>.
 
-   [RFC7518]  Jones, M., "JSON Web Algorithms (JWA)", RFC 7518,
-              DOI 10.17487/RFC7518, May 2015,
-              <https://www.rfc-editor.org/info/rfc7518>.
 
 
-
-
-
-
-
-Reddy & Ekman             Expires 16 July 2023                  [Page 7]
+Reddy & Ekman             Expires 20 July 2023                  [Page 7]
 
 Internet-Draft                EKU for JOSE                  January 2023
 
+
+   [RFC7518]  Jones, M., "JSON Web Algorithms (JWA)", RFC 7518,
+              DOI 10.17487/RFC7518, May 2015,
+              <https://www.rfc-editor.org/info/rfc7518>.
 
    [RFC8446]  Rescorla, E. and RFC Publisher, "The Transport Layer
               Security (TLS) Protocol Version 1.3", RFC 8446,
@@ -400,11 +412,12 @@ Internet-Draft                EKU for JOSE                  January 2023
               Signing", RFC 9336, DOI 10.17487/RFC9336, December 2022,
               <https://www.rfc-editor.org/info/rfc9336>.
 
-   [TS23.501] "3rd Generation Partnership Project;
-              Technical Specification Group Services and System Aspects;
-              System architecture for the 5G System (5GS); Stage 2 
-              (Release 18), 3GPP TS 23.501 V18.0.0 Dec 2022,", 
-              <https://www.3gpp.org/ftp/Specs/archive/23_series/23.501/23501-i00.zip>.
+   [TS23.501] "3rd Generation Partnership Project; Technical
+              Specification Group Services and System Aspects; System
+              architecture for the 5G System (5GS); Stage 2 (Release
+              18), 3GPP TS 23.501 V18.0.0 Dec 2022,",
+              <https://www.3gpp.org/ftp/Specs/
+              archive/23_series/23.501/23501-i00.zip>.
 
    [TS33.210] "3rd Generation Partnership Project; Technical
               Specification Group Services and System Aspects;Network
@@ -427,6 +440,16 @@ Internet-Draft                EKU for JOSE                  January 2023
               <https://www.3gpp.org/ftp/Specs/
               archive/33_series/33.501/33501-h70.zip>.
 
+
+
+
+
+
+Reddy & Ekman             Expires 20 July 2023                  [Page 8]
+
+Internet-Draft                EKU for JOSE                  January 2023
+
+
    [X.680]    "ITU-T, "Information technology - Abstract Syntax Notation
               One (ASN.1): Specification of basic notation", ITU-T
               Recommendation X.680, February 2021.",
@@ -437,16 +460,6 @@ Internet-Draft                EKU for JOSE                  January 2023
               Encoding Rules (CER) and Distinguished Encoding Rules
               (DER)", ITU-T Recommendation X.690, February 2021,",
               <https://www.itu.int/rec/T-REC-X.690>.
-
-
-
-
-
-
-Reddy & Ekman             Expires 16 July 2023                  [Page 8]
-
-Internet-Draft                EKU for JOSE                  January 2023
-
 
 Appendix A.  ASN.1 Module
 
@@ -484,6 +497,15 @@ Authors' Addresses
    Email: kondtir@gmail.com
 
 
+
+
+
+
+Reddy & Ekman             Expires 20 July 2023                  [Page 9]
+
+Internet-Draft                EKU for JOSE                  January 2023
+
+
    Jani Ekman
    Nokia
    Finland
@@ -499,4 +521,40 @@ Authors' Addresses
 
 
 
-Reddy & Ekman             Expires 16 July 2023                  [Page 9]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Reddy & Ekman             Expires 20 July 2023                 [Page 10]
