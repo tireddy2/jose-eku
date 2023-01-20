@@ -43,6 +43,19 @@
       </address>
     </author>
 
+    <author fullname="Migault Daniel" initials="D." surname="Migault">
+      <organization>Ericsson</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <country>Canada</country>
+        </postal>
+
+        <email>daniel.migault@ericsson.com</email>
+      </address>
+    </author>
     <date />
 
     <workgroup>LAMPS WG</workgroup>
@@ -121,7 +134,9 @@
       corresponding private key must not be allowed to sign the CCA. When a NF
       service producer receives the signed CCA from the NF service consumer,
       the NF would accept the token even if CCA is signed with a certificate
-      not issued for this purpose.</t>
+	      not issued for this purpose.</t>
+
+     
 
       <t>The KeyPurposeId id-kp-serverAuth (Section 4.2.1.12 of <xref
       target="RFC5280"></xref>) can be used to identify that the certificate
@@ -152,8 +167,8 @@
       only when, they appear in all capitals, as shown here.</t>
     </section>
 
-    <section title="Extended Key Purpose for JWS and JWE">
-      <t>This specification defines the KeyPurposeIds id-kp-jws and id-kp-jwe.
+    <section title="Extended Key Usage for JWS and JWE">
+      <t>This specification defines the KeyPurposeIds id-kp-jose.
       As described in <xref target="RFC5280"></xref>, "[i]f the [Extended Key
       Usage] extension is present, then the certificate MUST only be used for
       one of the purposes indicated." <xref target="RFC5280"></xref> also
@@ -161,10 +176,19 @@
       need not recognize all purposes indicated, as long as the intended
       purpose is present."</t>
 
-      <t>Applications processing JWS or JWE MAY require that the EKU extension
-      be present and that the id-kp-jws or id-kp-jwe be indicated in order for
+      <t>Applications processing JWS or JWE MAY require that the Extended 
+      Key Usage (EKU) extension be present and that the key purpose 
+      id-kp-jose be indicated in order for
       the certificate to be acceptable to validate the JWS Signature or to
-      encrypt the Content Encryption Key (CEK) in JWE.</t>
+      encrypt the Content Encryption Key (CEK) in JWE. </t>
+
+      <t>JWE and JWS have different key usage which is expressed by the KeyUsage extension. JWE key usage acceptable valkues are dataEncipherment encipherOnly or decipherOnly. JWS key usage acceptable value is digitalSignature.</t>  
+
+      <!-- I believe the extended extension shoud only indicate the JSON and leave the cryptographic usage to the Key Usage extention. 
+
+      Do we want to also add cose ?
+      -->
+
     </section>
 
     <section title="Including the Extended KeyPurpose for JWS and JWE in Certificates">
@@ -184,11 +208,11 @@ KeyPurposeId ::= OBJECT IDENTIFIER
       </figure>
 
       <t></t>
-
+      <!-- 
       <t>As described in <xref target="RFC5280"></xref>, the EKU extension
       may, at the option of the certificate issuer, be either critical or
-      non-critical. This specification defines the KeyPurposeIds id-kp-jws and
-      id-kp-jwe. Inclusion of KeyPurposeId id-kp-jws in a certificate
+      non-critical. This specification defines the KeyPurposeIds id-kp-jose.
+      Inclusion of KeyPurposeId id-kp-jws in a certificate
       indicates that the public key encoded in the certificate has been
       certified to be used for validating the JWS signature. Inclusion of
       KeyPurposeId id-kp-jwe in a certificate indicates that the public key
@@ -196,29 +220,33 @@ KeyPurposeId ::= OBJECT IDENTIFIER
       the CEK in JWE (for example, encrypt the CEK with the recipient's public
       key using the RSAES-OAEP algorithm to produce the JWE Encrypted
       Key).</t>
+      -->
 
       <t><figure>
           <artwork><![CDATA[     id-kp  OBJECT IDENTIFIER  ::= {
        iso(1) identified-organization(3) dod(6) internet(1)
        security(5) mechanisms(5) pkix(7) kp(3) }
 
-id-kp-jws OBJECT IDENTIFIER ::= { id-kp TBD1 }
-id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
+id-kp-jose OBJECT IDENTIFIER ::= { id-kp TBD1 }
 ]]></artwork>
         </figure></t>
     </section>
 
+    <!-- I am wondering why we have teh condition "Unless certificates are governed by vendor specific".
+    It is unclear to me what MUST means and how it can be enforced. The way I am reading it is that if the CA knows th ekey will not be used to sign/encrypt jose it needs to check the id-kp-jose has not been included. 
+    I am ok as long as we do not require any additional check to enable certificate issue being automated. 
+    -->
     <section anchor="solution"
              title="Implications for a Certification Authority">
       <t>The procedures and practices employed by a certification authority
       MUST ensure that the correct values for the EKU extension are inserted
-      in each certificate that is issued. Unless certificates are governed by
+      in each certificate that is issued. 
+      Unless certificates are governed by
       a vendor-specific PKI, certificates that indicate usage for JWS or JWE
-      MAY include the id-kp-jws or id-kp-jwe KeyPurposeId. The inclusion of
-      the id-kp-jws or id-kp-jwe KeyPurposeIds does not preclude the inclusion
+      MAY include the id-kp-jose which does not preclude the inclusion
       of other KeyPurposeIds.</t>
     </section>
-
+    
     <section anchor="Security" title="Security Considerations">
       <t>The Security Considerations of <xref target="RFC5280"></xref> are
       applicable to this document. This extended key purpose does not
@@ -260,9 +288,7 @@ id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
         <artwork><![CDATA[             +=========+=======================+============+
              | Decimal | Description           | References |
              +=========+=======================+============+
-             | TBD1    | id-kp-jws             | TBD3       |
-             +---------+-----------------------+------------+
-             | TBD2    | id-kp-jwe             | TBD3       |
+             | TBD1    | id-kp-jose            | This-RFC   |
              +---------+-----------------------+------------+
 ]]></artwork>
       </figure>
@@ -280,7 +306,7 @@ id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
           <artwork><![CDATA[               +=========+====================+============+
                | Decimal | Description        | References |
                +=========+====================+============+
-               | TBD4    | id-mod-jose-eku    | TBD3       |
+               | TBD2    | id-mod-jose-eku    | This-RFC   |
                +---------+--------------------+------------+
 ]]></artwork>
         </figure></t>
@@ -435,7 +461,7 @@ id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
 JOSE-EKU
   { iso(1) identified-organization(3) dod(6) internet(1)
   security(5) mechanisms(5) pkix(7) id-mod(0)
-  id-mod-jose-eku(TBD4) }
+  id-mod-jose-eku(TBD2) }
 
 DEFINITIONS IMPLICIT TAGS ::=
 BEGIN
@@ -448,13 +474,19 @@ id-kp OBJECT IDENTIFIER ::=
 
 -- Extended Key Usage Values
 
-id-kp-jws OBJECT IDENTIFIER ::= { id-kp TBD1 }
-id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
+id-kp-jose OBJECT IDENTIFIER ::= { id-kp TBD1 }
 
 END
 
 <CODE ENDS>]]></artwork>
       </figure>
     </section>
+
+    <!-- Not sure we need such section.
+    <section anchor="Example" title="Example Certificate containing a Extended Key Usage Purpose id-kp-jose ">
+
+   	    
+    </section>
+  -->
   </back>
 </rfc>
