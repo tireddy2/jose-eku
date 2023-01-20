@@ -5,7 +5,9 @@
 LAMPS WG                                                        T. Reddy
 Internet-Draft                                                  J. Ekman
 Intended status: Standards Track                                   Nokia
-Expires: 20 July 2023                                    16 January 2023
+Expires: 24 July 2023                                         D. Migault
+                                                                Ericsson
+                                                         20 January 2023
 
 
 X.509 Certificate Extended Key Usage (EKU) for Javascript Object Signing
@@ -38,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 July 2023.
+   This Internet-Draft will expire on 24 July 2023.
 
 Copyright Notice
 
@@ -48,16 +50,16 @@ Copyright Notice
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents (https://trustee.ietf.org/
    license-info) in effect on the date of publication of this document.
-   Please review these documents carefully, as they describe your rights
-   and restrictions with respect to this document.  Code Components
 
 
 
-Reddy & Ekman             Expires 20 July 2023                  [Page 1]
+Reddy, et al.             Expires 24 July 2023                  [Page 1]
 
 Internet-Draft                EKU for JOSE                  January 2023
 
 
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
    extracted from this document must include Revised BSD License text as
    described in Section 4.e of the Trust Legal Provisions and are
    provided without warranty as described in the Revised BSD License.
@@ -66,17 +68,17 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   3.  Extended Key Purpose for JWS and JWE  . . . . . . . . . . . .   4
+   3.  Extended Key Usage for JWS and JWE  . . . . . . . . . . . . .   4
    4.  Including the Extended KeyPurpose for JWS and JWE in
            Certificates  . . . . . . . . . . . . . . . . . . . . . .   4
    5.  Implications for a Certification Authority  . . . . . . . . .   5
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
-   7.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   6
+   7.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   5
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
    9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .   6
-   10. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   7
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .   7
+   10. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   6
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .   6
      11.2.  Informative References . . . . . . . . . . . . . . . . .   7
    Appendix A.  ASN.1 Module . . . . . . . . . . . . . . . . . . . .   9
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
@@ -101,18 +103,22 @@ Table of Contents
    algorithms and identifiers to be used with the JSON Web Signature
    (JWS) and JSON Web Encryption (JWE) are defined in [RFC7518].
 
+
+
+
+
+
+
+Reddy, et al.             Expires 24 July 2023                  [Page 2]
+
+Internet-Draft                EKU for JOSE                  January 2023
+
+
    Network Functions (NFs) as part of the service-based architecture
    within the 5G System [TS23.501].  The Operators of 5G systems make
    use of an internal PKI to generate X.509 PKI certificates for the NFs
    in a 5G system.  The certificates are used for the following
    purposes:
-
-
-
-Reddy & Ekman             Expires 20 July 2023                  [Page 2]
-
-Internet-Draft                EKU for JOSE                  January 2023
-
 
    *  Client and Server certificates for NFs in 5GC Service Based
       Architecture (Section 6.1.3c of [TS33.310])
@@ -154,6 +160,16 @@ Internet-Draft                EKU for JOSE                  January 2023
    there is no KeyPurposeIds to identify whether the certificate can be
    used to generate JWS or JWE.
 
+
+
+
+
+
+Reddy, et al.             Expires 24 July 2023                  [Page 3]
+
+Internet-Draft                EKU for JOSE                  January 2023
+
+
    Vendor-defined KeyPurposeIds that are used in a PKI governed by the
    vendor or a group of vendors pose no interoperability concern.
    Appropriating, or misappropriating as the case may be, KeyPurposeIds
@@ -162,13 +178,6 @@ Internet-Draft                EKU for JOSE                  January 2023
    which is difficult to determine.  Therefore, it is not favorable to
    use vendor-defined KeyPurposeIds for JWS and JWE in deployments that
    are not governed by the vendor.
-
-
-
-Reddy & Ekman             Expires 20 July 2023                  [Page 3]
-
-Internet-Draft                EKU for JOSE                  January 2023
-
 
    This document defines extended key purpose identifiers for JWS and
    JWE.
@@ -181,19 +190,25 @@ Internet-Draft                EKU for JOSE                  January 2023
    14 [RFC2119][RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-3.  Extended Key Purpose for JWS and JWE
+3.  Extended Key Usage for JWS and JWE
 
-   This specification defines the KeyPurposeIds id-kp-jws and id-kp-jwe.
-   As described in [RFC5280], "[i]f the [Extended Key Usage] extension
-   is present, then the certificate MUST only be used for one of the
+   This specification defines the KeyPurposeIds id-kp-jose.  As
+   described in [RFC5280], "[i]f the [Extended Key Usage] extension is
+   present, then the certificate MUST only be used for one of the
    purposes indicated."  [RFC5280] also notes that "[i]f multiple [key]
    purposes are indicated the application need not recognize all
    purposes indicated, as long as the intended purpose is present."
 
-   Applications processing JWS or JWE MAY require that the EKU extension
-   be present and that the id-kp-jws or id-kp-jwe be indicated in order
-   for the certificate to be acceptable to validate the JWS Signature or
-   to encrypt the Content Encryption Key (CEK) in JWE.
+   Applications processing JWS or JWE MAY require that the Extended Key
+   Usage (EKU) extension be present and that the key purpose id-kp-jose
+   be indicated in order for the certificate to be acceptable to
+   validate the JWS Signature or to encrypt the Content Encryption Key
+   (CEK) in JWE.
+
+   JWE and JWS have different key usage which is expressed by the
+   KeyUsage extension.  JWE key usage acceptable valkues are
+   dataEncipherment encipherOnly or decipherOnly.  JWS key usage
+   acceptable value is digitalSignature.
 
 4.  Including the Extended KeyPurpose for JWS and JWE in Certificates
 
@@ -203,6 +218,14 @@ Internet-Draft                EKU for JOSE                  January 2023
    extension can be used in conjunction with the key usage extension,
    which indicates the set of basic cryptographic operations for which
    the certified key may be used.  The EKU extension syntax is repeated
+
+
+
+Reddy, et al.             Expires 24 July 2023                  [Page 4]
+
+Internet-Draft                EKU for JOSE                  January 2023
+
+
    here for convenience:
 
    ExtKeyUsageSyntax ::= SEQUENCE SIZE (1..MAX) OF KeyPurposeId
@@ -210,39 +233,11 @@ Internet-Draft                EKU for JOSE                  January 2023
    KeyPurposeId ::= OBJECT IDENTIFIER
 
 
-
-
-
-
-
-
-
-
-
-
-
-Reddy & Ekman             Expires 20 July 2023                  [Page 4]
-
-Internet-Draft                EKU for JOSE                  January 2023
-
-
-   As described in [RFC5280], the EKU extension may, at the option of
-   the certificate issuer, be either critical or non-critical.  This
-   specification defines the KeyPurposeIds id-kp-jws and id-kp-jwe.
-   Inclusion of KeyPurposeId id-kp-jws in a certificate indicates that
-   the public key encoded in the certificate has been certified to be
-   used for validating the JWS signature.  Inclusion of KeyPurposeId id-
-   kp-jwe in a certificate indicates that the public key encoded in the
-   certificate has been certified to be used for encrypting the CEK in
-   JWE (for example, encrypt the CEK with the recipient's public key
-   using the RSAES-OAEP algorithm to produce the JWE Encrypted Key).
-
         id-kp  OBJECT IDENTIFIER  ::= {
           iso(1) identified-organization(3) dod(6) internet(1)
           security(5) mechanisms(5) pkix(7) kp(3) }
 
-   id-kp-jws OBJECT IDENTIFIER ::= { id-kp TBD1 }
-   id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
+   id-kp-jose OBJECT IDENTIFIER ::= { id-kp TBD1 }
 
 5.  Implications for a Certification Authority
 
@@ -250,9 +245,8 @@ Internet-Draft                EKU for JOSE                  January 2023
    MUST ensure that the correct values for the EKU extension are
    inserted in each certificate that is issued.  Unless certificates are
    governed by a vendor-specific PKI, certificates that indicate usage
-   for JWS or JWE MAY include the id-kp-jws or id-kp-jwe KeyPurposeId.
-   The inclusion of the id-kp-jws or id-kp-jwe KeyPurposeIds does not
-   preclude the inclusion of other KeyPurposeIds.
+   for JWS or JWE MAY include the id-kp-jose which does not preclude the
+   inclusion of other KeyPurposeIds.
 
 6.  Security Considerations
 
@@ -272,16 +266,6 @@ Internet-Draft                EKU for JOSE                  January 2023
    absence of the EKU extension in a certificate.  Examples of Permitted
    KeyPurposeId include the presence of JWS or JWE KeyPurposeId.
 
-
-
-
-
-
-Reddy & Ekman             Expires 20 July 2023                  [Page 5]
-
-Internet-Draft                EKU for JOSE                  January 2023
-
-
 7.  Privacy Considerations
 
    In some security protocols, such as TLS 1.2 [RFC5246], certificates
@@ -290,6 +274,14 @@ Internet-Draft                EKU for JOSE                  January 2023
    extension can help an observer determine the purpose of the
    certificate.  In addition, If the certificate is issued by a public
    certification authority, the inclusion of EKU extension can help an
+
+
+
+Reddy, et al.             Expires 24 July 2023                  [Page 5]
+
+Internet-Draft                EKU for JOSE                  January 2023
+
+
    attacker to monitor the Certificate Transparency logs [RFC9162] to
    identify the purpose of the certificate.
 
@@ -302,9 +294,7 @@ Internet-Draft                EKU for JOSE                  January 2023
                 +=========+=======================+============+
                 | Decimal | Description           | References |
                 +=========+=======================+============+
-                | TBD1    | id-kp-jws             | TBD3       |
-                +---------+-----------------------+------------+
-                | TBD2    | id-kp-jwe             | TBD3       |
+                | TBD1    | id-kp-jose            | This-RFC   |
                 +---------+-----------------------+------------+
 
                              Figure 1: Table 1
@@ -317,7 +307,7 @@ Internet-Draft                EKU for JOSE                  January 2023
                   +=========+====================+============+
                   | Decimal | Description        | References |
                   +=========+====================+============+
-                  | TBD4    | id-mod-jose-eku    | TBD3       |
+                  | TBD2    | id-mod-jose-eku    | This-RFC   |
                   +---------+--------------------+------------+
 
                              Figure 2: Table 2
@@ -331,13 +321,6 @@ Internet-Draft                EKU for JOSE                  January 2023
 
          Email: german.peinado@nokia.com
 
-
-
-Reddy & Ekman             Expires 20 July 2023                  [Page 6]
-
-Internet-Draft                EKU for JOSE                  January 2023
-
-
 10.  Acknowledgments
 
    TODO
@@ -346,62 +329,70 @@ Internet-Draft                EKU for JOSE                  January 2023
 
 11.1.  Normative References
 
-   [RFC2119]  Bradner, S. and RFC Publisher, "Key words for use in RFCs
-              to Indicate Requirement Levels", BCP 14, RFC 2119,
+
+
+
+
+Reddy, et al.             Expires 24 July 2023                  [Page 6]
+
+Internet-Draft                EKU for JOSE                  January 2023
+
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
-              Housley, R., Polk, W., and RFC Publisher, "Internet X.509
-              Public Key Infrastructure Certificate and Certificate
-              Revocation List (CRL) Profile", RFC 5280,
-              DOI 10.17487/RFC5280, May 2008,
+              Housley, R., and W. Polk, "Internet X.509 Public Key
+              Infrastructure Certificate and Certificate Revocation List
+              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <https://www.rfc-editor.org/info/rfc5280>.
 
    [RFC7159]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
               Interchange Format", RFC 7159, DOI 10.17487/RFC7159, March
               2014, <https://www.rfc-editor.org/info/rfc7159>.
 
-   [RFC7515]  Jones, M., Bradley, J., Sakimura, N., and RFC Publisher,
-              "JSON Web Signature (JWS)", RFC 7515,
-              DOI 10.17487/RFC7515, May 2015,
-              <https://www.rfc-editor.org/info/rfc7515>.
+   [RFC7515]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web
+              Signature (JWS)", RFC 7515, DOI 10.17487/RFC7515, May
+              2015, <https://www.rfc-editor.org/info/rfc7515>.
 
    [RFC7516]  Jones, M. and J. Hildebrand, "JSON Web Encryption (JWE)",
               RFC 7516, DOI 10.17487/RFC7516, May 2015,
               <https://www.rfc-editor.org/info/rfc7516>.
 
-   [RFC8174]  Leiba, B. and RFC Publisher, "Ambiguity of Uppercase vs
-              Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174,
-              DOI 10.17487/RFC8174, May 2017,
-              <https://www.rfc-editor.org/info/rfc8174>.
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
 11.2.  Informative References
 
-   [RFC5246]  Dierks, T., Rescorla, E., and RFC Publisher, "The
-              Transport Layer Security (TLS) Protocol Version 1.2",
-              RFC 5246, DOI 10.17487/RFC5246, August 2008,
+   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
+              (TLS) Protocol Version 1.2", RFC 5246,
+              DOI 10.17487/RFC5246, August 2008,
               <https://www.rfc-editor.org/info/rfc5246>.
 
    [RFC7299]  Housley, R., "Object Identifier Registry for the PKIX
               Working Group", RFC 7299, DOI 10.17487/RFC7299, July 2014,
               <https://www.rfc-editor.org/info/rfc7299>.
 
-
-
-Reddy & Ekman             Expires 20 July 2023                  [Page 7]
-
-Internet-Draft                EKU for JOSE                  January 2023
-
-
    [RFC7518]  Jones, M., "JSON Web Algorithms (JWA)", RFC 7518,
               DOI 10.17487/RFC7518, May 2015,
               <https://www.rfc-editor.org/info/rfc7518>.
 
-   [RFC8446]  Rescorla, E. and RFC Publisher, "The Transport Layer
-              Security (TLS) Protocol Version 1.3", RFC 8446,
-              DOI 10.17487/RFC8446, August 2018,
+   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
+
+
+
+
+
+
+Reddy, et al.             Expires 24 July 2023                  [Page 7]
+
+Internet-Draft                EKU for JOSE                  January 2023
+
 
    [RFC9162]  Laurie, B., Messeri, E., and R. Stradling, "Certificate
               Transparency Version 2.0", RFC 9162, DOI 10.17487/RFC9162,
@@ -440,16 +431,6 @@ Internet-Draft                EKU for JOSE                  January 2023
               <https://www.3gpp.org/ftp/Specs/
               archive/33_series/33.501/33501-h70.zip>.
 
-
-
-
-
-
-Reddy & Ekman             Expires 20 July 2023                  [Page 8]
-
-Internet-Draft                EKU for JOSE                  January 2023
-
-
    [X.680]    "ITU-T, "Information technology - Abstract Syntax Notation
               One (ASN.1): Specification of basic notation", ITU-T
               Recommendation X.680, February 2021.",
@@ -461,6 +442,14 @@ Internet-Draft                EKU for JOSE                  January 2023
               (DER)", ITU-T Recommendation X.690, February 2021,",
               <https://www.itu.int/rec/T-REC-X.690>.
 
+
+
+
+Reddy, et al.             Expires 24 July 2023                  [Page 8]
+
+Internet-Draft                EKU for JOSE                  January 2023
+
+
 Appendix A.  ASN.1 Module
 
    The following module adheres to ASN.1 specifications [X.680] and
@@ -470,7 +459,7 @@ Appendix A.  ASN.1 Module
    JOSE-EKU
      { iso(1) identified-organization(3) dod(6) internet(1)
      security(5) mechanisms(5) pkix(7) id-mod(0)
-     id-mod-jose-eku(TBD4) }
+     id-mod-jose-eku(TBD2) }
 
    DEFINITIONS IMPLICIT TAGS ::=
    BEGIN
@@ -483,8 +472,7 @@ Appendix A.  ASN.1 Module
 
    -- Extended Key Usage Values
 
-   id-kp-jws OBJECT IDENTIFIER ::= { id-kp TBD1 }
-   id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
+   id-kp-jose OBJECT IDENTIFIER ::= { id-kp TBD1 }
 
    END
    <CODE ENDS>
@@ -497,64 +485,20 @@ Authors' Addresses
    Email: kondtir@gmail.com
 
 
-
-
-
-
-Reddy & Ekman             Expires 20 July 2023                  [Page 9]
-
-Internet-Draft                EKU for JOSE                  January 2023
-
-
    Jani Ekman
    Nokia
    Finland
    Email: jani.ekman@nokia.com
 
 
+   Migault Daniel
+   Ericsson
+   Canada
+   Email: daniel.migault@ericsson.com
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Reddy & Ekman             Expires 20 July 2023                 [Page 10]
+Reddy, et al.             Expires 24 July 2023                  [Page 9]
