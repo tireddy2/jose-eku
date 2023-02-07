@@ -43,6 +43,20 @@
       </address>
     </author>
 
+    <author fullname="Daniel Migault" initials="D." surname="Migault">
+      <organization>Ericsson</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <country>Canada</country>
+        </postal>
+
+        <email>daniel.migault@ericsson.com</email>
+      </address>
+    </author>
+
     <date />
 
     <workgroup>LAMPS WG</workgroup>
@@ -50,12 +64,12 @@
     <abstract>
       <t>RFC 5280 specifies several extended key purpose identifiers
       (KeyPurposeIds) for X.509 certificates. This document defines JSON Web
-      Signature (JWS) and JSON Web Encryption (JWE) KeyPurposeIds for
+      Signature (JWS), JSON Web Encryption (JWE), CBOR Object Web Signature (CWS) and CBOR Object Web Encryption (CWE) KeyPurposeIds 
       inclusion in the Extended Key Usage (EKU) extension of X.509 public key
-      certificates. An application processing JWS or JWE may require that the
-      EKU extension be present and that a JWS KeyPurposeId or JWE KeyPurposeId
+      certificates. An application processing JWS, JWE, CWS or CWE may require that the
+      EKU extension be present and that a JWS, JWE, CWS or CWE  KeyPurposeId 
       be indicated in order for the certificate to be acceptable to validate
-      the JWS signature or to encrypt a key in JWE.</t>
+      the JWS or CWS signature or to encrypt a key in JWE or CWE.</t>
     </abstract>
   </front>
 
@@ -68,18 +82,22 @@
       of the anyExtendedKeyUsage KeyPurposeId is bad practice for publicly
       trusted certificates (multi-purpose or single-purpose), there are no
       extended key purpose identifiers explicitly assigned for JSON Web
-      Signature (JWS) <xref target="RFC7515"></xref> and JSON Web Encryption
-      (JWE) <xref target="RFC7516"></xref>. JSON Web Signature (JWS)
+      Signature (JWS) <xref target="RFC7515"></xref> JSON Web Encryption
+      (JWE) <xref target="RFC7516"></xref> or their CBOR Object Signing and 
+      Encryption (COSE) <xref target="RFC9052"></xref> counterparts defined 
+      here as CBOR Object Web Signature (CWS) and CBOR Object Web Encryption 
+      (CWE). JSON Web Signature (JWS) (resp. CBOR Object Web Signature (CWS))
       represents content secured with digital signatures or Message
-      Authentication Codes (MACs) using JSON-based <xref
-      target="RFC7159"></xref> data structures. The JWS cryptographic
+      Authentication Codes (MACs) using JSON-based <xref 
+      target="RFC7159"></xref> data structures (resp.
+	      <xref target="RFC9052"></xref>). The JWS and CWS cryptographic
       mechanisms provide integrity protection for an arbitrary sequence of
-      octets. JSON Web Encryption (JWE) represents encrypted content using
-      JSON-based data structures. The JWE cryptographic mechanisms encrypt and
+      octets. JSON Web Encryption (JWE) (resp. CBOR Object Web Encryption (CWE)) represents encrypted content using
+      JSON-based data structures. The JWE and CWE cryptographic mechanisms encrypt and
       provide integrity protection for an arbitrary sequence of octets. The
       cryptographic algorithms and identifiers to be used with the JSON Web
-      Signature (JWS) and JSON Web Encryption (JWE) are defined in <xref
-      target="RFC7518"></xref>.</t>
+      Signature (JWS) and JSON Web Encryption (JWE) (resp. CWS, CWE) are defined in <xref
+      target="RFC7518"></xref> (resp. <xref target="RFC9052"></xref>). </t>
 
       <t>Network Functions (NFs) as part of the service-based architecture
       within the 5G System <xref target="TS23.501"></xref>. The Operators of
@@ -129,7 +147,7 @@
       id-kp-clientAuth (Section 4.2.1.12 of <xref target="RFC5280"></xref>)
       can be used to identify that the certificate is for a client (e.g., NF
       service consumer). However, there is no KeyPurposeIds to identify
-      whether the certificate can be used to generate JWS or JWE.</t>
+      whether the certificate can be used to generate JWS, JWE, CWS or CWE.</t>
 
       <t>Vendor-defined KeyPurposeIds that are used in a PKI governed by the
       vendor or a group of vendors pose no interoperability concern.
@@ -137,23 +155,26 @@
       use outside of their originally intended vendor or group of vendors
       controlled environment can introduce problems, the impact of which is
       difficult to determine. Therefore, it is not favorable to use
-      vendor-defined KeyPurposeIds for JWS and JWE in deployments that are not
+      vendor-defined KeyPurposeIds for JWS, JWE, CWS and CWE in deployments that are not
       governed by the vendor.</t>
 
-      <t>This document defines extended key purpose identifiers for JWS and
-      JWE.</t>
+      <t>This document defines extended key purpose identifiers for JWS, JWE, CWS and CWE.</t>
     </section>
 
     <section anchor="notation" title="Terminology">
+
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
       "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
       "OPTIONAL" in this document are to be interpreted as described in BCP 14
       <xref target="RFC2119"></xref><xref target="RFC8174"></xref> when, and
-      only when, they appear in all capitals, as shown here.</t>
+	      only when, they appear in all capitals, as shown here.</t>
+
+    <t>CBOR Object Web Signature (CWS): Signing Object of a CBOR Object Signing and Encryption (COSE) defined in <xref target="RFC9052"></xref> Section 4.</t>
+    <t> CBOR Object Web Encryption (CWE): Encryption Object of a CBOR Object Signing and Encryption (COSE) defined in <xref target="RFC9052"></xref> Section 4.</t>
     </section>
 
-    <section title="Extended Key Purpose for JWS and JWE">
-      <t>This specification defines the KeyPurposeIds id-kp-jws and id-kp-jwe.
+    <section title="Extended Key Purpose for JWS, JWE, CWS and CWE">
+      <t>This specification defines the KeyPurposeIds id-kp-jws, id-kp-jwe, id-kp-cws and id-kp-cwe.
       As described in <xref target="RFC5280"></xref>, "[i]f the [Extended Key
       Usage] extension is present, then the certificate MUST only be used for
       one of the purposes indicated." <xref target="RFC5280"></xref> also
@@ -161,10 +182,10 @@
       need not recognize all purposes indicated, as long as the intended
       purpose is present."</t>
 
-      <t>Applications processing JWS or JWE MAY require that the EKU extension
+      <t>Applications processing JWS, JWE, CWS or CWE MAY require that the EKU extension
       be present and that the id-kp-jws or id-kp-jwe be indicated in order for
-      the certificate to be acceptable to validate the JWS Signature or to
-      encrypt the Content Encryption Key (CEK) in JWE.</t>
+      the certificate to be acceptable to validate the JWS or CWS Signature or to
+      encrypt the Content Encryption Key (CEK) in JWE or CWE.</t>
     </section>
 
     <section title="Including the Extended KeyPurpose for JWS and JWE in Certificates">
@@ -187,15 +208,16 @@ KeyPurposeId ::= OBJECT IDENTIFIER
 
       <t>As described in <xref target="RFC5280"></xref>, the EKU extension
       may, at the option of the certificate issuer, be either critical or
-      non-critical. This specification defines the KeyPurposeIds id-kp-jws and
-      id-kp-jwe. Inclusion of KeyPurposeId id-kp-jws in a certificate
+      non-critical. This specification defines the KeyPurposeIds id-kp-jws,
+      id-kp-jwe, id-kp-cws and id-kp-cwe. Inclusion of KeyPurposeId id-kp-jws or id-kp-cws in a certificate
       indicates that the public key encoded in the certificate has been
-      certified to be used for validating the JWS signature. Inclusion of
-      KeyPurposeId id-kp-jwe in a certificate indicates that the public key
+      certified to be used for validating the JWS or CWS signature. Inclusion of
+      KeyPurposeId id-kp-jwe or id-kp-cwe in a certificate indicates that the public key
       encoded in the certificate has been certified to be used for encrypting
       the CEK in JWE (for example, encrypt the CEK with the recipient's public
-      key using the RSAES-OAEP algorithm to produce the JWE Encrypted
-      Key).</t>
+      key using the RSAES-OAEP algorithm to produce the JWE (resp. CWE) Encrypted
+	      Key).</t>
+
 
       <t><figure>
           <artwork><![CDATA[     id-kp  OBJECT IDENTIFIER  ::= {
@@ -204,6 +226,8 @@ KeyPurposeId ::= OBJECT IDENTIFIER
 
 id-kp-jws OBJECT IDENTIFIER ::= { id-kp TBD1 }
 id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
+id-kp-cws OBJECT IDENTIFIER ::= { id-kp TBD3 }
+id-kp-cwe OBJECT IDENTIFIER ::= { id-kp TBD4 }
 ]]></artwork>
         </figure></t>
     </section>
@@ -213,9 +237,9 @@ id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
       <t>The procedures and practices employed by a certification authority
       MUST ensure that the correct values for the EKU extension are inserted
       in each certificate that is issued. Unless certificates are governed by
-      a vendor-specific PKI, certificates that indicate usage for JWS or JWE
-      MAY include the id-kp-jws or id-kp-jwe KeyPurposeId. The inclusion of
-      the id-kp-jws or id-kp-jwe KeyPurposeIds does not preclude the inclusion
+      a vendor-specific PKI, certificates that indicate usage for JWS, JWE, SWS or CWE 
+      MAY include the id-kp-jws, id-kp-jwe, id-kp-cws or id-kp-cwe KeyPurposeId. The inclusion of
+      the id-kp-jws, id-kp-jwe, id-kp-cws or id-kp-cwe KeyPurposeIds does not preclude the inclusion
       of other KeyPurposeIds.</t>
     </section>
 
@@ -224,7 +248,7 @@ id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
       applicable to this document. This extended key purpose does not
       introduce new security risks but instead reduces existing security risks
       by providing means to identify if the certificate is generated to
-      process JWS signature or used for encrypting the CEK in JWE.</t>
+      process JWS or CWS signature or toencrypt the CEK in JWE or CWE.</t>
 
       <t>To reduce the risk of specific cross-protocol attacks, the relying
       party or the relying party software may additionally prohibit use of
@@ -234,7 +258,7 @@ id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
       target="RFC9336"></xref>. Examples of Excluded KeyPurposeId include the
       presence of the anyExtendedKeyUsage KeyPurposeId or the complete absence
       of the EKU extension in a certificate. Examples of Permitted
-      KeyPurposeId include the presence of JWS or JWE KeyPurposeId.</t>
+	      KeyPurposeId include the presence of JWS, JWE, CWS or CWE KeyPurposeId.</t>
     </section>
 
     <section anchor="Privacy" title="Privacy Considerations">
@@ -260,9 +284,13 @@ id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
         <artwork><![CDATA[             +=========+=======================+============+
              | Decimal | Description           | References |
              +=========+=======================+============+
-             | TBD1    | id-kp-jws             | TBD3       |
+             | TBD1    | id-kp-jws             | This-RFC   |
              +---------+-----------------------+------------+
-             | TBD2    | id-kp-jwe             | TBD3       |
+             | TBD2    | id-kp-jwe             | This-RFC   |
+             +---------+-----------------------+------------+
+             | TBD3    | id-kp-cws             | This-RFC   |
+             +---------+-----------------------+------------+
+             | TBD4    | id-kp-cwe             | This-RFC   |
              +---------+-----------------------+------------+
 ]]></artwork>
       </figure>
@@ -278,10 +306,10 @@ id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
           <name>Table 2</name>
 
           <artwork><![CDATA[               +=========+====================+============+
-               | Decimal | Description        | References |
-               +=========+====================+============+
-               | TBD4    | id-mod-jose-eku    | TBD3       |
-               +---------+--------------------+------------+
+               | Decimal | Description          | References |
+               +=========+======================+============+
+               | TBD4    | id-mod-jose+cose-eku | TBD5      |
+               +---------+----------------------+------------+
 ]]></artwork>
         </figure></t>
     </section>
@@ -315,6 +343,7 @@ id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
       <?rfc include="reference.RFC.7516"?>
 
       <?rfc include="reference.RFC.7159"?>
+      <?rfc include="reference.RFC.9052"?>
     </references>
 
     <references title="Informative References">
@@ -450,6 +479,8 @@ id-kp OBJECT IDENTIFIER ::=
 
 id-kp-jws OBJECT IDENTIFIER ::= { id-kp TBD1 }
 id-kp-jwe OBJECT IDENTIFIER ::= { id-kp TBD2 }
+id-kp-cws OBJECT IDENTIFIER ::= { id-kp TBD3 }
+id-kp-cwe OBJECT IDENTIFIER ::= { id-kp TBD4 }
 
 END
 
