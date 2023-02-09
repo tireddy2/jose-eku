@@ -199,7 +199,7 @@
       Key (CEK) in JWE or CWE.</t>
     </section>
 
-    <section title="Including the Extended KeyPurpose for JWS and JWE in Certificates">
+    <section title="Including the Extended KeyPurpose for JWS, JWE, CWS and CWE in Certificates">
       <t><xref target="RFC5280"></xref> specifies the EKU X.509 certificate
       extension for use on end entity certificates. The extension indicates
       one or more purposes for which the certified public key is valid. The

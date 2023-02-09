@@ -5,9 +5,9 @@
 LAMPS WG                                                        T. Reddy
 Internet-Draft                                                  J. Ekman
 Intended status: Standards Track                                   Nokia
-Expires: 12 August 2023                                       D. Migault
+Expires: 13 August 2023                                       D. Migault
                                                                 Ericsson
-                                                         8 February 2023
+                                                         9 February 2023
 
 
 X.509 Certificate Extended Key Usage (EKU) for Javascript Object Signing
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 August 2023.
+   This Internet-Draft will expire on 13 August 2023.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Reddy, et al.            Expires 12 August 2023                 [Page 1]
+Reddy, et al.            Expires 13 August 2023                 [Page 1]
 
 Internet-Draft            EKU for JOSE and COSE            February 2023
 
@@ -72,7 +72,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
    3.  Extended Key Purpose for JWS, JWE, CWS and CWE  . . . . . . .   4
-   4.  Including the Extended KeyPurpose for JWS and JWE in
+   4.  Including the Extended KeyPurpose for JWS, JWE, CWS and CWE in
            Certificates  . . . . . . . . . . . . . . . . . . . . . .   5
    5.  Implications for a Certification Authority  . . . . . . . . .   5
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Reddy, et al.            Expires 12 August 2023                 [Page 2]
+Reddy, et al.            Expires 13 August 2023                 [Page 2]
 
 Internet-Draft            EKU for JOSE and COSE            February 2023
 
@@ -165,7 +165,7 @@ Internet-Draft            EKU for JOSE and COSE            February 2023
 
 
 
-Reddy, et al.            Expires 12 August 2023                 [Page 3]
+Reddy, et al.            Expires 13 August 2023                 [Page 3]
 
 Internet-Draft            EKU for JOSE and COSE            February 2023
 
@@ -221,12 +221,13 @@ Internet-Draft            EKU for JOSE and COSE            February 2023
 
 
 
-Reddy, et al.            Expires 12 August 2023                 [Page 4]
+Reddy, et al.            Expires 13 August 2023                 [Page 4]
 
 Internet-Draft            EKU for JOSE and COSE            February 2023
 
 
-4.  Including the Extended KeyPurpose for JWS and JWE in Certificates
+4.  Including the Extended KeyPurpose for JWS, JWE, CWS and CWE in
+    Certificates
 
    [RFC5280] specifies the EKU X.509 certificate extension for use on
    end entity certificates.  The extension indicates one or more
@@ -276,8 +277,7 @@ Internet-Draft            EKU for JOSE and COSE            February 2023
 
 
 
-
-Reddy, et al.            Expires 12 August 2023                 [Page 5]
+Reddy, et al.            Expires 13 August 2023                 [Page 5]
 
 Internet-Draft            EKU for JOSE and COSE            February 2023
 
@@ -333,7 +333,7 @@ Internet-Draft            EKU for JOSE and COSE            February 2023
 
 
 
-Reddy, et al.            Expires 12 August 2023                 [Page 6]
+Reddy, et al.            Expires 13 August 2023                 [Page 6]
 
 Internet-Draft            EKU for JOSE and COSE            February 2023
 
@@ -389,7 +389,7 @@ Internet-Draft            EKU for JOSE and COSE            February 2023
 
 
 
-Reddy, et al.            Expires 12 August 2023                 [Page 7]
+Reddy, et al.            Expires 13 August 2023                 [Page 7]
 
 Internet-Draft            EKU for JOSE and COSE            February 2023
 
@@ -445,7 +445,7 @@ Internet-Draft            EKU for JOSE and COSE            February 2023
 
 
 
-Reddy, et al.            Expires 12 August 2023                 [Page 8]
+Reddy, et al.            Expires 13 August 2023                 [Page 8]
 
 Internet-Draft            EKU for JOSE and COSE            February 2023
 
@@ -501,7 +501,7 @@ Appendix A.  ASN.1 Module
 
 
 
-Reddy, et al.            Expires 12 August 2023                 [Page 9]
+Reddy, et al.            Expires 13 August 2023                 [Page 9]
 
 Internet-Draft            EKU for JOSE and COSE            February 2023
 
@@ -557,4 +557,4 @@ Authors' Addresses
 
 
 
-Reddy, et al.            Expires 12 August 2023                [Page 10]
+Reddy, et al.            Expires 13 August 2023                [Page 10]
