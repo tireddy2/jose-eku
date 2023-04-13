@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc category="std" docName="draft-reddy-lamps-jose-eku-02" ipr="trust200902">
+  <front>
+    <title abbrev="EKU for JOSE">X.509 Certificate Extended Key Usage (EKU)
+    for (JOSE) and CBOR Object Signing and Encryption (COSE)</title>
+
+    <author fullname="Tirumaleswar Reddy" initials="T." surname="Reddy">
+      <organization>Nokia</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <country>India</country>
+        </postal>
+
+        <email>kondtir@gmail.com</email>
+      </address>
+    </author>
+
+    <author fullname="Jani Ekman" initials="J." surname="Ekman">
+      <organization>Nokia</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <country>Finland</country>
+        </postal>
+
+        <email>jani.ekman@nokia.com</email>
+      </address>
+    </author>
+
+    <author fullname="Daniel Migault" initials="D." surname="Migault">
+      <organization>Ericsson</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <country>Canada</country>
+        </postal>
+
+        <email>daniel.migault@ericsson.com</email>
+      </address>
+    </author>
+
+    <date />
+
+    <workgroup>LAMPS WG</workgroup>
+
+    <abstract>
+      <t>RFC 5280 specifies several extended key purpose identifiers
+      (KeyPurposeIds) for X.509 certificates. This document defines JSON Web
+      Signature (JWS), JSON Web Encryption (JWE), CBOR Object Web Signature
+      (CWS) and CBOR Object Web Encryption (CWE) KeyPurposeIds inclusion in
+      the Extended Key Usage (EKU) extension of X.509 public key certificates.
+      An application processing JWS, JWE, CWS or CWE may require that the EKU
+      extension be present and that a JWS, JWE, CWS or CWE KeyPurposeId be
+      indicated in order for the certificate to be acceptable to validate the
+      JWS or CWS signature or to encrypt a key in JWE or CWE.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section anchor="intro" title="Introduction">
+      <t><xref target="RFC5280"></xref> specifies several extended key purpose
+      identifiers (KeyPurposeIds) for X.509 certificates. In addition, the
+      IANA repository "SMI Security for PKIX Extended Key Purpose" <xref
+      target="RFC7299"></xref> includes a number of KeyPurposeIds. While usage
+      of the anyExtendedKeyUsage KeyPurposeId is bad practice - especially but
+      not only for for publicly trusted certificates (multi-purpose or
+      single-purpose) - there are no extended key purpose identifiers
+      explicitly assigned for JSON Web Signature (JWS) <xref
+      target="RFC7515"></xref> JSON Web Encryption (JWE) <xref
+      target="RFC7516"></xref> or their CBOR Object Signing and Encryption
+      (COSE) <xref target="RFC9052"></xref> counterparts defined as CBOR
+      Object Web Signature (CWS) and CBOR Object Web Encryption (CWE).</t>
+
+      <t>JSON Web Signature (JWS) and CBOR Object Web Signature (CWS)
+      represents content secured with digital signatures or Message
+      Authentication Codes (MACs) using JSON-based <xref
+      target="RFC7159"></xref> data structures and CBOR-based <xref
+      target="RFC8949"></xref> data structures. The JWS and CWS cryptographic
+      mechanisms provide integrity protection for an arbitrary sequence of
+      octets.</t>
+
+      <t>JSON Web Encryption (JWE) and CBOR Object Web Encryption (CWE)
+      represents encrypted content using JSON-based data structures and
+      CBOR-based data structures. The JWE and CWE cryptographic mechanisms
+      encrypt and provide integrity protection for an arbitrary sequence of
+      octets. The cryptographic algorithms and identifiers to be used with the
+      JSON Web Signature (JWS) and JSON Web Encryption (JWE), CBOR Object Web
+      Signature (CWS) and CBOR Object Web Encryption (CWE) are defined in
+      <xref target="RFC7518"></xref> and <xref target="RFC9052"></xref>.</t>
+
+      <t>Network Functions (NFs) as part of the service-based architecture
+      within the 5G System <xref target="TS23.501"></xref>. The Operators of
+      5G systems make use of an internal PKI to generate X.509 PKI
+      certificates for the NFs in a 5G system. The certificates are used for
+      the following purposes:</t>
+
+      <t><list style="symbols">
+          <t>Client and Server certificates for NFs in 5GC Service Based
+          Architecture (Section 6.1.3c of <xref target="TS33.310"></xref>)</t>
+
+          <t>Certificates for signing Client Credentials Assertion (CCA)
+          tokens using JWS (Section 13.3.8.2 of <xref
+          target="TS33.501"></xref>)</t>
+
+          <t>Certificates for encrypting JSON objects in HTTP messages between
+          Security Edge Protection Proxies (SEPPs) using JWE (Section 13.2.4.4
+          of <xref target="TS33.501"></xref>) and Section 6.3.2 of <xref
+          target="TS33.210"></xref>)</t>
+
+          <t>Certificates for signing the OAuth 2.0 access tokens for service
+          authorization to grant temporary access to resources provided by NF
+          producers using JWS (Section 13.4.1 of <xref
+          target="TS33.501"></xref>)</t>
+        </list></t>
+
+      <t>If the purpose of the issued certificates is not restricted, i.e.,
+      the type of operations for which a public key contained in the
+      certificate can be used are not specified, those certificates could be
+      used for another purpose than intended, violating the CA policies, and
+      increasing the risk of cross-protocol attacks. Failure to ensure proper
+      segregation of duties means that a NF who generates the public/private
+      keys and applies for a certificate to the operator CA, could obtain a
+      certificate which can be misused for tasks that this NF is not entitled
+      to perform. For example, a NF service consumer could impersonate NF
+      service producers using its certificate. Another example, if the purpose
+      of the certificate is for the NF service consumer is to use it as a
+      client certificate, the NF with this client certificate and
+      corresponding private key must not be allowed to sign the CCA. When a NF
+      service producer receives the signed CCA from the NF service consumer,
+      the NF would accept the token even if CCA is signed with a certificate
+      not issued for this purpose.</t>
+
+      <t>The KeyPurposeId id-kp-serverAuth (Section 4.2.1.12 of <xref
+      target="RFC5280"></xref>) can be used to identify that the certificate
+      is for a server (e.g., NF service producer), and the KeyPurposeId
+      id-kp-clientAuth (Section 4.2.1.12 of <xref target="RFC5280"></xref>)
+      can be used to identify that the certificate is for a client (e.g., NF
+      service consumer). However, there is no KeyPurposeIds to identify
+      whether the certificate can be used to generate JWS, JWE, CWS or
+      CWE.</t>
+
+      <t>Vendor-defined KeyPurposeIds that are used in a PKI governed by the
+      vendor or a group of vendors pose no interoperability concern.
+      Appropriating, or misappropriating as the case may be, KeyPurposeIds for
+      use outside of their originally intended vendor or group of vendors
+      controlled environment can introduce problems, the impact of which is
+      difficult to determine. Therefore, it is not favorable to use
+      vendor-defined KeyPurposeIds for JWS, JWE, CWS and CWE in deployments
+      that are not governed by the vendor.</t>
+
+      <t>This document defines extended key purpose identifiers for JWS, JWE,
+      CWS and CWE.</t>
+    </section>
+
+    <section anchor="notation" title="Terminology">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in BCP 14
+      <xref target="RFC2119"></xref><xref target="RFC8174"></xref> when, and
+      only when, they appear in all capitals, as shown here.</t>
+
+      <t>CBOR Object Web Signature (CWS): Signing Object of a CBOR Object
+      Signing and Encryption (COSE) defined in Section 4 of <xref
+      target="RFC9052"></xref>.</t>
+
+      <t>CBOR Object Web Encryption (CWE): Encryption Object of a CBOR Object
+      Signing and Encryption (COSE) defined in Section 4 of <xref
+      target="RFC9052"></xref>.</t>
+    </section>
+
+    <section title="Extended Key Purpose for JWS, JWE, CWS and CWE">
+      <t>This specification defines the KeyPurposeIds id-kp-json, id-kp-cbor.
+      As described in <xref target="RFC5280"></xref>, "[i]f the [Extended Key
+      Usage] extension is present, then the certificate MUST only be used for
+      one of the purposes indicated." <xref target="RFC5280"></xref> also
+      notes that "[i]f multiple [key] purposes are indicated the application
+      need not recognize all purposes indicated, as long as the intended
+      purpose is present."</t>
+
+      <t>Applications processing JWS, JWE, CWS or CWE MAY require the CBOR
+      format or the JSON format be specified by the EKU extention id-kp-cbor
+      or id-kp-json. In addition, such application MUST require the keyUsage
+      extension be set to nonRepudiation (also designated as
+      contentCommitment) for the signature calculation and/or to
+      keyEncipherment for encryption of the secret key.</t>
+    </section>
+
+    <section title="Including the Extended KeyPurpose for JWS and JWE in Certificates">
+      <t><xref target="RFC5280"></xref> specifies the EKU X.509 certificate
+      extension for use on end entity certificates. The extension indicates
+      one or more purposes for which the certified public key is valid. The
+      EKU extension can be used in conjunction with the key usage extension,
+      which indicates the set of basic cryptographic operations for which the
+      certified key may be used. The EKU extension syntax is repeated here for
+      convenience:</t>
+
+      <figure>
+        <artwork><![CDATA[ExtKeyUsageSyntax ::= SEQUENCE SIZE (1..MAX) OF KeyPurposeId 
+
+KeyPurposeId ::= OBJECT IDENTIFIER 
+]]></artwork>
+      </figure>
+
+      <t></t>
+
+      <t>As described in <xref target="RFC5280"></xref>, the EKU extension
+      may, at the option of the certificate issuer, be either critical or
+      non-critical. This specification defines the KeyPurposeIds id-kp-json
+      and id-kp-cbor. Inclusion of KeyPurposeId id-kp-json in a certificate
+      indicates that the public key encoded in the certificate has been
+      certified to be used for validating the JWS or that the public key
+      encoded in the certificate has been certified to be used for encrypting
+      the Content Encryption Key (CEK) in JWE (for example, encrypt the CEK
+      with the recipient's public key using the RSAES-OAEP algorithm to
+      produce the JWE Encrypted Key). The distinction between JWS and JWE is
+      performed via the KU that is set to nonRepudiation for JWS and
+      dataEncipherment for JWE.</t>
+
+      <t>Similarly, inclusion of KeyPurposeId id-kp-cbor in a certificate
+      indicates that the public key encoded in the certificate has been
+      certified to be used for validating the CWS or that the public key
+      encoded in the certificate has been certified to be used for encrypting
+      the CEK in CWE. The distinction between CWS and CWE is performed via the
+      KU that is set to nonRepudiation for CWS and dataEncipherment for
+      CWE.</t>
+
+      <t><figure>
+          <artwork><![CDATA[     id-kp  OBJECT IDENTIFIER  ::= {
+       iso(1) identified-organization(3) dod(6) internet(1)
+       security(5) mechanisms(5) pkix(7) kp(3) }
+
+id-kp-json OBJECT IDENTIFIER ::= { id-kp TBD1 }
+id-kp-cbor OBJECT IDENTIFIER ::= { id-kp TBD2 }
+]]></artwork>
+        </figure></t>
+    </section>
+
+    <section anchor="solution"
+             title="Implications for a Certification Authority">
+      <t>The procedures and practices employed by a certification authority
+      MUST ensure that the correct values for the EKU extension as well as the
+      KU extension are inserted in each certificate that is issued. The
+      inclusion of the id-kp-json, id-kp-cbor KeyPurposeIds does not preclude
+      the inclusion of other KeyPurposeIds.</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>The Security Considerations of <xref target="RFC5280"></xref> are
+      applicable to this document. This extended key purpose does not
+      introduce new security risks but instead reduces existing security risks
+      by providing means to identify if the certificate is generated to
+      process JWS or CWS signature or to encrypt the CEK in JWE or CWE.</t>
+
+      <t>To reduce the risk of specific cross-protocol attacks, the relying
+      party or the relying party software may additionally prohibit use of
+      specific combinations of KeyPurposeIds. The procedure of using Excluded
+      KeyPurposeId and Permitted KeyPurposeId by an relying party to permit or
+      prohibit combinations of KeyPurposeIds is defined in Section 4 of <xref
+      target="RFC9336"></xref>. Examples of Excluded KeyPurposeId include the
+      presence of the anyExtendedKeyUsage KeyPurposeId or the complete absence
+      of the EKU extension in a certificate. Examples of Permitted
+      KeyPurposeId include the presence of JWS, JWE, CWS or CWE
+      KeyPurposeId.</t>
+    </section>
+
+    <section anchor="Privacy" title="Privacy Considerations">
+      <t>In some security protocols, such as TLS 1.2 <xref
+      target="RFC5246"></xref>, certificates are exchanged in the clear. In
+      other security protocols, such as TLS 1.3 <xref
+      target="RFC8446"></xref>, the certificates are encrypted. The inclusion
+      of EKU extension can help an observer determine the purpose of the
+      certificate. In addition, If the certificate is issued by a public
+      certification authority, the inclusion of EKU extension can help an
+      attacker to monitor the Certificate Transparency logs <xref
+      target="RFC9162"></xref> to identify the purpose of the certificate.</t>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>IANA is requested to register the following OIDs in the "SMI Security
+      for PKIX Extended Key Purpose" registry (1.3.6.1.5.5.7.3). This OID is
+      defined in Section 4.</t>
+
+      <figure anchor="fig-a">
+        <name>Table 1</name>
+
+        <artwork><![CDATA[             +=========+=======================+============+
+             | Decimal | Description           | References |
+             +=========+=======================+============+
+             | TBD1    | id-kp-json            | This-RFC   |
+             +---------+-----------------------+------------+
+             | TBD2    | id-kp-cbor            | This-RFC   |
+             +---------+-----------------------+------------+
+]]></artwork>
+      </figure>
+
+      <t></t>
+
+      <t>IANA is also requested to register the following ASN.1<xref
+      target="X.680"></xref> module OID in the "SMI Security for PKIX Module
+      Identifier" registry (1.3.6.1.5.5.7.0). This OID is defined in <xref
+      target="Appendix"></xref>.</t>
+
+      <t><figure anchor="fig-b">
+          <name>Table 2</name>
+
+          <artwork><![CDATA[               +=========+====================+============+
+               | Decimal |     Description          | References |
+               +=========+==========================+============+
+               | TBD5    | id-mod-jose-and-cose-eku | This-RFC   |
+               +---------+--------------------------+------------+
+]]></artwork>
+        </figure></t>
+    </section>
+
+    <section anchor="contrib" title="Contributors">
+      <t>The following individuals have contributed to this document:</t>
+
+      <t><figure>
+          <artwork><![CDATA[      German Peinado
+      Nokia
+
+      Email: german.peinado@nokia.com]]></artwork>
+        </figure></t>
+    </section>
+
+    <section anchor="acknowledgments" title="Acknowledgments">
+      <t>We would like to thank Corey Bonnell, Ilari Liusvaara, Carl Wallace
+      and Russ Housley for their useful feedback.</t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2119"?>
+
+      <?rfc include="reference.RFC.8174"?>
+
+      <?rfc include="reference.RFC.5280"?>
+
+      <?rfc include="reference.RFC.7515"?>
+
+      <?rfc include="reference.RFC.7516"?>
+
+      <?rfc include="reference.RFC.7159"?>
+
+      <?rfc include="reference.RFC.9052"?>
+
+      <?rfc include="reference.RFC.8949"?>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include='reference.RFC.5246'?>
+
+      <?rfc include='reference.RFC.8446'
+?>
+
+      <?rfc include="reference.RFC.7299"?>
+
+      <?rfc include="reference.RFC.9336"?>
+
+      <?rfc include="reference.RFC.9162"?>
+
+      <?rfc include="reference.RFC.7518"?>
+
+      <reference anchor="X.680" target="https://www.itu.int/rec/T-REC-X.680">
+        <front>
+          <title>ITU-T, "Information technology - Abstract Syntax Notation One
+          (ASN.1): Specification of basic notation", ITU-T Recommendation
+          X.680, February 2021.</title>
+
+          <author>
+            <organization></organization>
+          </author>
+
+          <date day="" month="" year="" />
+        </front>
+      </reference>
+
+      <reference anchor="X.690" target="https://www.itu.int/rec/T-REC-X.690">
+        <front>
+          <title>ITU-T, "Information technology - ASN.1 encoding rules:
+          Specification of Basic Encoding Rules (BER), Canonical Encoding
+          Rules (CER) and Distinguished Encoding Rules (DER)", ITU-T
+          Recommendation X.690, February 2021,</title>
+
+          <author>
+            <organization></organization>
+          </author>
+
+          <date day="" month="" year="" />
+        </front>
+      </reference>
+
+      <reference anchor="TS33.501"
+                 target="https://www.3gpp.org/ftp/Specs/archive/33_series/33.501/33501-h70.zip">
+        <front>
+          <title>3rd Generation Partnership Project; Technical Specification
+          Group Services and System Aspects; Security architecture and
+          procedures for 5G system (Release 17), , 3GPP TS:33.501 V17.7.0,
+          Sept 2022,</title>
+
+          <author>
+            <organization></organization>
+          </author>
+
+          <date day="" month="" year="" />
+        </front>
+      </reference>
+
+      <reference anchor="TS33.310"
+                 target="https://www.3gpp.org/ftp/Specs/archive/33_series/33.310/33310-h40.zip">
+        <front>
+          <title>3rd Generation Partnership Project; Technical Specification
+          Group Services and System Aspects; Network Domain Security (NDS);
+          Authentication Framework (AF) (Release 17), 3GPP 33.310 V17.4.0,
+          Sept 2022,</title>
+
+          <author>
+            <organization></organization>
+          </author>
+
+          <date day="" month="" year="" />
+        </front>
+      </reference>
+
+      <reference anchor="TS33.210"
+                 target="https://www.3gpp.org/ftp/Specs/archive/33_series/33.210/33210-h10.zip">
+        <front>
+          <title>3rd Generation Partnership Project; Technical Specification
+          Group Services and System Aspects;Network Domain Security (NDS); IP
+          network layer security (Release 17), 3GPP TS 33.210 V17.1.0 Sept
+          2022,</title>
+
+          <author>
+            <organization></organization>
+          </author>
+
+          <date day="" month="" year="" />
+        </front>
+      </reference>
+
+      <reference anchor="TS23.501"
+                 target="https://www.3gpp.org/ftp/Specs/archive/23_series/23.501/23501-i00.zip">
+        <front>
+          <title>3rd Generation Partnership Project; Technical Specification
+          Group Services and System Aspects; System architecture for the 5G
+          System (5GS); Stage 2 (Release 18), 3GPP TS 23.501 V18.0.0 Dec
+          2022,</title>
+
+          <author>
+            <organization></organization>
+          </author>
+
+          <date day="" month="" year="" />
+        </front>
+      </reference>
+    </references>
+
+    <section anchor="Appendix" title="ASN.1 Module">
+      <t>The following module adheres to ASN.1 specifications <xref
+      target="X.680"></xref> and <xref target="X.690"></xref>.</t>
+
+      <figure>
+        <artwork><![CDATA[<CODE BEGINS>
+
+JOSE-EKU
+  { iso(1) identified-organization(3) dod(6) internet(1)
+  security(5) mechanisms(5) pkix(7) id-mod(0)
+  id-mod-jose-eku(TBD4) }
+
+DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+-- OID Arc
+
+id-kp OBJECT IDENTIFIER ::=
+  { iso(1) identified-organization(3) dod(6) internet(1)
+    security(5) mechanisms(5) pkix(7) kp(3) }
+
+-- Extended Key Usage Values
+
+id-kp-json OBJECT IDENTIFIER ::= { id-kp TBD1 }
+id-kp-cbor OBJECT IDENTIFIER ::= { id-kp TBD2 }
+
+END
+
+<CODE ENDS>]]></artwork>
+      </figure>
+    </section>
+  </back>
+</rfc>
