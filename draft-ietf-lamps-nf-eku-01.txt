@@ -5,9 +5,9 @@
 LAMPS WG                                                        T. Reddy
 Internet-Draft                                                  J. Ekman
 Intended status: Standards Track                                   Nokia
-Expires: 19 November 2023                                     D. Migault
+Expires: 2 December 2023                                      D. Migault
                                                                 Ericsson
-                                                             18 May 2023
+                                                             31 May 2023
 
 
   X.509 Certificate Extended Key Usage (EKU) for 5G Network Functions
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 November 2023.
+   This Internet-Draft will expire on 2 December 2023.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Reddy, et al.           Expires 19 November 2023                [Page 1]
+Reddy, et al.            Expires 2 December 2023                [Page 1]
 
 Internet-Draft                EKUs for NFs                      May 2023
 
@@ -72,7 +72,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
    3.  Extended Key Purpose for Network Functions  . . . . . . . . .   4
-   4.  Including the Extended KeyPurpose in Certificates . . . . . .   4
+   4.  Including the Extended Key Purpose in Certificates  . . . . .   4
    5.  Implications for a Certification Authority  . . . . . . . . .   5
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
    7.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   6
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Reddy, et al.           Expires 19 November 2023                [Page 2]
+Reddy, et al.            Expires 2 December 2023                [Page 2]
 
 Internet-Draft                EKUs for NFs                      May 2023
 
@@ -165,7 +165,7 @@ Internet-Draft                EKUs for NFs                      May 2023
 
 
 
-Reddy, et al.           Expires 19 November 2023                [Page 3]
+Reddy, et al.            Expires 2 December 2023                [Page 3]
 
 Internet-Draft                EKUs for NFs                      May 2023
 
@@ -205,7 +205,7 @@ Internet-Draft                EKUs for NFs                      May 2023
    signature calculation and/or to keyEncipherment for encryption of the
    secret key.
 
-4.  Including the Extended KeyPurpose in Certificates
+4.  Including the Extended Key Purpose in Certificates
 
    [RFC5280] specifies the EKU X.509 certificate extension for use on
    end entity certificates.  The extension indicates one or more
@@ -221,7 +221,7 @@ Internet-Draft                EKUs for NFs                      May 2023
 
 
 
-Reddy, et al.           Expires 19 November 2023                [Page 4]
+Reddy, et al.            Expires 2 December 2023                [Page 4]
 
 Internet-Draft                EKUs for NFs                      May 2023
 
@@ -236,8 +236,8 @@ Internet-Draft                EKUs for NFs                      May 2023
    public key using the RSAES-OAEP algorithm to produce the JWE
    Encrypted Key) and signing the OAuth 2.0 access tokens.  The
    distinction between JWS and JWE is performed via the KU that is set
-   to digitalSignature or nonRepudiation for JWS and dataEncipherment
-   for JWE.
+   to digitalSignature or nonRepudiation for JWS and keyEncipherment for
+   JWE.
 
         id-kp  OBJECT IDENTIFIER  ::= {
           iso(1) identified-organization(3) dod(6) internet(1)
@@ -277,7 +277,7 @@ Internet-Draft                EKUs for NFs                      May 2023
 
 
 
-Reddy, et al.           Expires 19 November 2023                [Page 5]
+Reddy, et al.            Expires 2 December 2023                [Page 5]
 
 Internet-Draft                EKUs for NFs                      May 2023
 
@@ -333,7 +333,7 @@ Internet-Draft                EKUs for NFs                      May 2023
 
 
 
-Reddy, et al.           Expires 19 November 2023                [Page 6]
+Reddy, et al.            Expires 2 December 2023                [Page 6]
 
 Internet-Draft                EKUs for NFs                      May 2023
 
@@ -389,7 +389,7 @@ Internet-Draft                EKUs for NFs                      May 2023
 
 
 
-Reddy, et al.           Expires 19 November 2023                [Page 7]
+Reddy, et al.            Expires 2 December 2023                [Page 7]
 
 Internet-Draft                EKUs for NFs                      May 2023
 
@@ -445,7 +445,7 @@ Internet-Draft                EKUs for NFs                      May 2023
 
 
 
-Reddy, et al.           Expires 19 November 2023                [Page 8]
+Reddy, et al.            Expires 2 December 2023                [Page 8]
 
 Internet-Draft                EKUs for NFs                      May 2023
 
@@ -501,7 +501,7 @@ Appendix A.  ASN.1 Module
 
 
 
-Reddy, et al.           Expires 19 November 2023                [Page 9]
+Reddy, et al.            Expires 2 December 2023                [Page 9]
 
 Internet-Draft                EKUs for NFs                      May 2023
 
@@ -557,4 +557,4 @@ Authors' Addresses
 
 
 
-Reddy, et al.           Expires 19 November 2023               [Page 10]
+Reddy, et al.            Expires 2 December 2023               [Page 10]

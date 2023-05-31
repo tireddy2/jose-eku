@@ -67,7 +67,7 @@
       JSON objects in HTTP messages, JSON Web Token (JWT) and signing the
       OAuth 2.0 access tokens KeyPurposeIds for inclusion in the Extended Key
       Usage (EKU) extension of X.509 v3 public key certificates used by
-      Network Functions (NFs) for the 5G System. </t>
+      Network Functions (NFs) for the 5G System.</t>
     </abstract>
   </front>
 
@@ -179,7 +179,7 @@
       keyEncipherment for encryption of the secret key.</t>
     </section>
 
-    <section title="Including the Extended KeyPurpose in Certificates">
+    <section title="Including the Extended Key Purpose in Certificates">
       <t><xref target="RFC5280"></xref> specifies the EKU X.509 certificate
       extension for use on end entity certificates. The extension indicates
       one or more purposes for which the certified public key is valid. The
@@ -207,7 +207,7 @@ KeyPurposeId ::= OBJECT IDENTIFIER
       with the recipient's public key using the RSAES-OAEP algorithm to
       produce the JWE Encrypted Key) and signing the OAuth 2.0 access tokens.
       The distinction between JWS and JWE is performed via the KU that is set
-      to digitalSignature or nonRepudiation for JWS and dataEncipherment for
+      to digitalSignature or nonRepudiation for JWS and keyEncipherment for
       JWE.</t>
 
       <t><figure>
