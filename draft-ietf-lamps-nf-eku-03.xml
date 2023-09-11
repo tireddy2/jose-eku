@@ -74,48 +74,52 @@
   <middle>
     <section anchor="intro" title="Introduction">
       <t>The Operators of 5G systems make use of an internal PKI to generate
-      X.509 PKI certificates for the Network Functions (NFs) in a 5G system.
-      The certificates are used for the following purposes:</t>
+      X.509 PKI certificates for the Network Functions (NFs) (Section 6 of
+      <xref target="TS23.501"></xref>) in a 5G system. The certificates are
+      used for the following purposes:</t>
 
       <t><list style="symbols">
           <t>Client and Server certificates for NFs in 5GC Service Based
           Architecture (see Section 6.1.3c of <xref
           target="TS33.310"></xref>)</t>
 
-          <t>Client Credentials Assertion (CCA) is JSON Web Tokens (JWT) <xref
-          target="RFC7519"></xref> and is secured with digital signatures
-          based on JSON Web Signature (JWS) <xref target="RFC7515"></xref>
-          (see Section 13.3.8.2 of <xref target="TS33.501"></xref>).</t>
+          <t>Client Credentials Assertion (CCA) uses JSON Web Tokens (JWT)
+          <xref target="RFC7519"></xref> and is secured with digital
+          signatures based on JSON Web Signature (JWS) <xref
+          target="RFC7515"></xref> (see Section 13.3.8.2 of <xref
+          target="TS33.501"></xref>).</t>
 
           <t>Certificates for encrypting JSON objects in HTTP messages between
           Security Edge Protection Proxies (SEPPs) using JSON Web Encryption
           (JWE) <xref target="RFC7516"></xref> (Section 13.2.4.4 of <xref
           target="TS33.501"></xref>) and Section 6.3.2 of <xref
-          target="TS33.210"></xref>)</t>
+          target="TS33.210"></xref>).</t>
 
           <t>Certificates for signing the OAuth 2.0 access tokens for service
           authorization to grant temporary access to resources provided by NF
           producers using JWS (see Section 13.4.1 of <xref
-          target="TS33.501"></xref>)</t>
+          target="TS33.501"></xref>).</t>
         </list></t>
 
-      <t><xref target="RFC5280"></xref> specifies several extended key purpose
-      identifiers (EKU), defined via KeyPurposeIds, for X.509 certificates. In
+      <t><xref target="RFC5280"></xref> specifies several key usage
+      extensions, defined via KeyPurposeIds, for X.509 certificates. Key usage
+      extensions added to a certificate are meant to express intent as to the
+      purpose of the named usage, for humans and for complying libraries. In
       addition, the IANA repository "SMI Security for PKIX Extended Key
       Purpose" <xref target="RFC7299"></xref> contains additional
       KeyPurposeIds. It's important to note that using the anyExtendedKeyUsage
       KeyPurposeId, as defined in Section 4.2.1.12 of <xref
-      target="RFC7299"></xref>, is generally considered a poor practice. This
+      target="RFC5280"></xref>, is generally considered a poor practice. This
       is especially true for publicly trusted certificates, whether they are
       multi-purpose or single-purpose, within the context of 5G systems and
-      the 5GC Service Based Architecture.</t>
+      the 5G Core Service Based Architecture.</t>
 
       <t>If the purpose of the issued certificates is not restricted, i.e.,
       the type of operations for which a public key contained in the
       certificate can be used are not specified, those certificates could be
       used for another purpose than intended, violating the CA policies, and
       increasing the risk of cross-protocol attacks. Failure to ensure proper
-      segregation of duties means that a NF who generates the public/private
+      segregation of duties means that a NF which generates the public/private
       keys and applies for a certificate to the operator CA, could obtain a
       certificate which can be misused for tasks that this NF is not entitled
       to perform. For example, a NF service consumer could impersonate NF
@@ -132,7 +136,7 @@
       is for a server (e.g., NF service producer), and the KeyPurposeId
       id-kp-clientAuth (Section 4.2.1.12 of <xref target="RFC5280"></xref>)
       can be used to identify that the certificate is for a client (e.g., NF
-      service consumer). However, there is currently no KeyPurposeIds for the
+      service consumer). However, there are currently no KeyPurposeIds for the
       other usages of certificates in 5G System. This document defines the
       Extended Key Usage (EKU) extension of X.509 public key certificates for
       signing the JWT Claims set using JWS, encrypting JSON objects in HTTP
@@ -177,20 +181,20 @@
       verifying the signature of an OAuth 2.0 access tokens for service
       authorization to grant temporary access to resources provided by NF
       producers using JWS MAY require corresponding KeyPurposeIds be specified
-      by the EKU extention. In addition, such application MUST require the
-      keyUsage extension be set to digitalSignature or nonRepudiation (also
+      by the EKU extension. In addition, such application MUST require the
+      KeyUsage extension be set to digitalSignature or nonRepudiation (also
       designated as contentCommitment) for the signature calculation and/or to
       keyEncipherment for encryption of the secret key.</t>
     </section>
 
     <section title="Including the Extended Key Purpose in Certificates">
-      <t><xref target="RFC5280"></xref> specifies the EKU X.509 certificate
-      extension for use on end entity certificates. The extension indicates
-      one or more purposes for which the certified public key is valid. The
-      EKU extension can be used in conjunction with the key usage extension,
-      which indicates the set of basic cryptographic operations for which the
-      certified key may be used. The EKU extension syntax is repeated here for
-      convenience:</t>
+      <t><xref target="RFC5280"></xref> specifies the extended key purpose
+      identifiers (EKU) X.509 certificate extension for use on end entity
+      certificates. The extension indicates one or more purposes for which the
+      certified public key is valid. The EKU extension can be used in
+      conjunction with the key usage extension, which indicates the set of
+      basic cryptographic operations for which the certified key may be used.
+      The EKU extension syntax is repeated here for convenience:</t>
 
       <figure>
         <artwork><![CDATA[ExtKeyUsageSyntax ::= SEQUENCE SIZE (1..MAX) OF KeyPurposeId 
@@ -209,7 +213,7 @@ KeyPurposeId ::= OBJECT IDENTIFIER
       been certified for use in the following: <list style="numbers">
           <t>Validating the JWS Signature in JWT. The distinction between JWS
           and JWE is determined by the KU that is set to digitalSignature or
-          nonRepudiation for JWS and keyEncipherment for JWE. </t>
+          nonRepudiation for JWS and keyEncipherment for JWE.</t>
 
           <t>Encrypting JSON objects in HTTP messages (for example, encrypting
           the CEK with the recipient's public key using the RSAES-OAEP
@@ -267,7 +271,7 @@ id-kp-oauthAccessTokenSigning OBJECT IDENTIFIER ::= { id-kp TBD3 }
       target="RFC5246"></xref>, certificates are exchanged in the clear. In
       other security protocols, such as TLS 1.3 <xref
       target="RFC8446"></xref>, the certificates are encrypted. The inclusion
-      of EKU extension can help an observer determine the purpose of the
+      of the EKU extension can help an observer determine the purpose of the
       certificate. In addition, If the certificate is issued by a public
       certification authority, the inclusion of EKU extension can help an
       attacker to monitor the Certificate Transparency logs <xref
@@ -276,8 +280,8 @@ id-kp-oauthAccessTokenSigning OBJECT IDENTIFIER ::= { id-kp TBD3 }
 
     <section anchor="IANA" title="IANA Considerations">
       <t>IANA is requested to register the following OIDs in the "SMI Security
-      for PKIX Extended Key Purpose" registry (1.3.6.1.5.5.7.3). This OID is
-      defined in Section 4.</t>
+      for PKIX Extended Key Purpose" registry (1.3.6.1.5.5.7.3). These OIDs
+      are defined in Section 4.</t>
 
       <figure anchor="fig-a">
         <name>Table 1</name>
@@ -327,8 +331,10 @@ id-kp-oauthAccessTokenSigning OBJECT IDENTIFIER ::= { id-kp TBD3 }
     </section>
 
     <section anchor="acknowledgments" title="Acknowledgments">
-      <t>We would like to thank Corey Bonnell, Ilari Liusvaara, Carl Wallace,
-      Yoav Nir and Russ Housley for their useful feedback.</t>
+      <t>We would like to thank Corey Bonnell, Ilari Liusvaara, Carl Wallace
+      and Russ Housley for their useful feedback. Thanks to Yoav Nir for the
+      secdir review, Elwyn Davies for the genart review and Benson Muite for
+      the intdir review.</t>
     </section>
   </middle>
 
@@ -351,21 +357,6 @@ id-kp-oauthAccessTokenSigning OBJECT IDENTIFIER ::= { id-kp TBD3 }
       <!-- <?rfc include="reference.RFC.9052"?> -->
 
       <!-- <?rfc include="reference.RFC.8949"?> -->
-    </references>
-
-    <references title="Informative References">
-      <?rfc include='reference.RFC.5246'?>
-
-      <?rfc include='reference.RFC.8446'
-?>
-
-      <?rfc include="reference.RFC.7299"?>
-
-      <?rfc include="reference.RFC.9336"?>
-
-      <?rfc include="reference.RFC.9162"?>
-
-      <!-- <?rfc include="reference.RFC.7518"?> -->
 
       <reference anchor="X.680" target="https://www.itu.int/rec/T-REC-X.680">
         <front>
@@ -395,6 +386,21 @@ id-kp-oauthAccessTokenSigning OBJECT IDENTIFIER ::= { id-kp TBD3 }
           <date day="" month="" year="" />
         </front>
       </reference>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include='reference.RFC.5246'?>
+
+      <?rfc include='reference.RFC.8446'
+?>
+
+      <?rfc include="reference.RFC.7299"?>
+
+      <?rfc include="reference.RFC.9336"?>
+
+      <?rfc include="reference.RFC.9162"?>
+
+      <!-- <?rfc include="reference.RFC.7518"?> -->
 
       <reference anchor="TS33.501"
                  target="https://www.3gpp.org/ftp/Specs/archive/33_series/33.501/33501-h70.zip">
