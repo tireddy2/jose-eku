@@ -73,10 +73,11 @@
 
   <middle>
     <section anchor="intro" title="Introduction">
-      <t>The Operators of 5G systems make use of an internal PKI to generate
-      X.509 PKI certificates for the Network Functions (NFs) (Section 6 of
-      <xref target="TS23.501"></xref>) in a 5G system. The certificates are
-      used for the following purposes:</t>
+      <t>The Operators of 5G ("fifth generation") systems as defined by 3GPP
+      make use of an internal PKI to generate X.509 PKI certificates for the
+      Network Functions (NFs) (Section 6 of <xref target="TS23.501"></xref>)
+      in a 5G system. The certificates are used for the following
+      purposes:</t>
 
       <t><list style="symbols">
           <t>Client and Server certificates for NFs in 5GC Service Based
@@ -105,31 +106,31 @@
       extensions, defined via KeyPurposeIds, for X.509 certificates. Key usage
       extensions added to a certificate are meant to express intent as to the
       purpose of the named usage, for humans and for complying libraries. In
-      addition, the IANA repository "SMI Security for PKIX Extended Key
-      Purpose" <xref target="RFC7299"></xref> contains additional
-      KeyPurposeIds. It's important to note that using the anyExtendedKeyUsage
-      KeyPurposeId, as defined in Section 4.2.1.12 of <xref
-      target="RFC5280"></xref>, is generally considered a poor practice. This
-      is especially true for publicly trusted certificates, whether they are
-      multi-purpose or single-purpose, within the context of 5G systems and
-      the 5G Core Service Based Architecture.</t>
+      addition, the IANA registry "SMI Security for PKIX Extended Key Purpose"
+      <xref target="RFC7299"></xref> contains additional KeyPurposeIds.The use
+      of the anyExtendedKeyUsage KeyPurposeId, as defined in Section 4.2.1.12
+      of <xref target="RFC5280"></xref>, is generally considered a poor
+      practice. This is especially true for publicly trusted certificates,
+      whether they are multi-purpose or single-purpose, within the context of
+      5G systems and the 5G Core Service Based Architecture.</t>
 
       <t>If the purpose of the issued certificates is not restricted, i.e.,
       the type of operations for which a public key contained in the
       certificate can be used are not specified, those certificates could be
-      used for another purpose than intended, violating the CA policies, and
-      increasing the risk of cross-protocol attacks. Failure to ensure proper
-      segregation of duties means that a NF which generates the public/private
-      keys and applies for a certificate to the operator CA, could obtain a
-      certificate which can be misused for tasks that this NF is not entitled
-      to perform. For example, a NF service consumer could impersonate NF
-      service producers using its certificate. Another example, if the purpose
-      of the certificate is for the NF service consumer is to use it as a
-      client certificate, the NF with this client certificate and
-      corresponding private key must not be allowed to sign the CCA. When a NF
-      service producer receives the signed CCA from the NF service consumer,
-      the NF would accept the token even if CCA is signed with a certificate
-      not issued for this purpose.</t>
+      used for another purpose than intended, increasing the risk of
+      cross-protocol attacks. Failure to ensure proper segregation of duties
+      means that a NF which generates the public/private keys and applies for
+      a certificate to the operator CA, could obtain a certificate which can
+      be misused for tasks that this NF is not entitled to perform. For
+      example, a NF service consumer could potentially impersonate NF service
+      producers using its certificate. Additionally, in cases where the
+      certificate's purpose is intended for use by the NF service consumer as
+      a client certificate, it's essential to ensure that the NF with this
+      client certificate and the corresponding private key is not allowed to
+      sign the Client Credentials Assertion (CCA). When a NF service producer
+      receives the signed CCA from the NF service consumer, the NF should only
+      accept the token if the CCA is signed with a certificate that has been
+      explicitly issued for this purpose.</t>
 
       <t>The KeyPurposeId id-kp-serverAuth (Section 4.2.1.12 of <xref
       target="RFC5280"></xref>) can be used to identify that the certificate
@@ -137,11 +138,11 @@
       id-kp-clientAuth (Section 4.2.1.12 of <xref target="RFC5280"></xref>)
       can be used to identify that the certificate is for a client (e.g., NF
       service consumer). However, there are currently no KeyPurposeIds for the
-      other usages of certificates in 5G System. This document defines the
-      Extended Key Usage (EKU) extension of X.509 public key certificates for
-      signing the JWT Claims set using JWS, encrypting JSON objects in HTTP
-      messages using JWE, and signing the OAuth 2.0 access tokens using
-      JWS.</t>
+      other usages of certificates in 5G System. This document addresses the
+      above problem by defining the Extended Key Usage (EKU) extension of
+      X.509 public key certificates for signing the JWT Claims set using JWS,
+      encrypting JSON objects in HTTP messages using JWE, and signing the
+      OAuth 2.0 access tokens using JWS.</t>
 
       <t>Vendor-defined KeyPurposeIds used within a PKI governed by the vendor
       or a group of vendors typically do not pose interoperability concerns,
@@ -151,6 +152,10 @@
       Therefore, it is advisable not to rely on vendor-defined KeyPurposeIds.
       Instead, the specification defines standard KeyPurposeIds to ensure
       interoperability across various implementations.</t>
+
+      <t>Although the specification focuses on a 5G use case, the standard
+      KeyPurposeIds defined in this document can be used in other
+      deployments.</t>
     </section>
 
     <section anchor="notation" title="Terminology">
@@ -163,38 +168,40 @@
 
     <section title="Extended Key Purpose for Network Functions">
       <t>This specification defines the KeyPurposeIds id-kp-jwt,
-      id-kp-httpContentEncrypt, id-kp-oauthAccessTokenSigning for respectively
-      signing the JWT Claims set of CCA using JWS, encrypting JSON objects in
-      HTTP messages between Security Edge Protection Proxies (SEPPs) using JWE
-      and signing the OAuth 2.0 access tokens for service authorization to
-      grant temporary access to resources provided by NF producers using JWS.
-      As described in <xref target="RFC5280"></xref>, "[i]f the [Extended Key
-      Usage] extension is present, then the certificate MUST only be used for
-      one of the purposes indicated." <xref target="RFC5280"></xref> also
-      notes that "[i]f multiple [key] purposes are indicated the application
-      need not recognize all purposes indicated, as long as the intended
-      purpose is present."</t>
-
-      <t>Applications verifying the signature of a Client Credentials
-      Assertion (CCA) represented as JWT, decrypting JSON objects in HTTP
-      messages between Security Edge Protection Proxies (SEPPs) using JWE or
-      verifying the signature of an OAuth 2.0 access tokens for service
+      id-kp-httpContentEncrypt, id-kp-oauthAccessTokenSigning and uses these
+      for respectively signing the JWT Claims set of CCA using JWS, encrypting
+      JSON objects in HTTP messages between Security Edge Protection Proxies
+      (SEPPs) using JWE and signing the OAuth 2.0 access tokens for service
       authorization to grant temporary access to resources provided by NF
-      producers using JWS MAY require corresponding KeyPurposeIds be specified
-      by the EKU extension. In addition, such application MUST require the
-      KeyUsage extension be set to digitalSignature or nonRepudiation (also
-      designated as contentCommitment) for the signature calculation and/or to
-      keyEncipherment for encryption of the secret key.</t>
+      producers using JWS. As described in <xref target="RFC5280"></xref>,
+      "[i]f the [Extended Key Usage] extension is present, then the
+      certificate MUST only be used for one of the purposes indicated." <xref
+      target="RFC5280"></xref> also notes that "[i]f multiple [key] purposes
+      are indicated the application need not recognize all purposes indicated,
+      as long as the intended purpose is present."</t>
+
+      <t>Network functions that verify the signature of a CCA represented as a
+      JWT, decrypt JSON objects in HTTP messages between Security Edge
+      Protection Proxies (SEPPs) using JWE, or verify the signature of an
+      OAuth 2.0 access tokens for service authorization to grant temporary
+      access to resources provided by NF producers using JWS SHOULD require
+      the specification of corresponding KeyPurposeIds by the Extended Key
+      Usage (EKU) extension. If the CA knows network functions are mandated to
+      use these KeyPurposeIds, it MUST enforce their inclusion. Additionally,
+      such CA MUST ensure that the KeyUsage extension be set to
+      digitalSignature or nonRepudiation (also designated as
+      contentCommitment) for signature calculation and/or to keyEncipherment
+      for secret key encryption. </t>
     </section>
 
     <section title="Including the Extended Key Purpose in Certificates">
-      <t><xref target="RFC5280"></xref> specifies the extended key purpose
-      identifiers (EKU) X.509 certificate extension for use on end entity
-      certificates. The extension indicates one or more purposes for which the
-      certified public key is valid. The EKU extension can be used in
-      conjunction with the key usage extension, which indicates the set of
-      basic cryptographic operations for which the certified key may be used.
-      The EKU extension syntax is repeated here for convenience:</t>
+      <t> specifies the Extended Key Usage (EKU) X.509 certificate extension
+      for use on end entity certificates. The extension indicates one or more
+      purposes for which the certified public key is valid. The EKU extension
+      can be used in conjunction with the key usage extension, which indicates
+      the set of basic cryptographic operations for which the certified key
+      may be used. The EKU extension syntax is repeated here for
+      convenience:</t>
 
       <figure>
         <artwork><![CDATA[ExtKeyUsageSyntax ::= SEQUENCE SIZE (1..MAX) OF KeyPurposeId 
